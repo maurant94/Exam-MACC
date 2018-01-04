@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!-- A CardView that contains a TextView -->
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    card_view:cardBackgroundColor="@android:color/holo_blue_bright"
+    card_view:cardElevation="5dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:contentPadding="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/cardTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top|start"
+            android:textColor="@android:color/background_dark"
+            android:textSize="24sp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addToCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/daysLabel"
+            android:layout_marginBottom="1dp"
+            android:layout_marginEnd="5dp"
+            android:layout_toStartOf="@+id/delete"
+            android:clickable="true"
+            android:focusable="true"
+            android:tint="@android:color/background_dark"
+            card_view:elevation="3dp"
+            card_view:fabSize="mini"
+            card_view:srcCompat="@android:drawable/btn_star" />
+
+        <TextView
+            android:id="@+id/expiryDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/expiryDateLabel"
+            android:layout_alignBottom="@+id/expiryDateLabel"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/expiryDateLabel"
+            android:text="@string/dummy_date" />
+
+        <TextView
+            android:id="@+id/buyDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/cardTextView"
+            android:layout_marginEnd="10dp"
+            android:gravity="start"
+            android:text="@string/buy_date" />
+
+        <TextView
+            android:id="@+id/buyDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/buyDateLabel"
+            android:layout_alignBottom="@+id/buyDateLabel"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/buyDateLabel"
+            android:text="@string/dummy_date" />
+
+        <TextView
+            android:id="@+id/daysToExpiry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/daysAgoLabel"
+            android:layout_marginEnd="3dp"
+            android:layout_toEndOf="@+id/expiryDate"
+            android:paddingEnd="3dp"
+            android:paddingStart="3dp"
+            android:text="@string/dummy_days" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/daysLabel"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
+            android:layout_marginBottom="1dp"
+            android:layout_marginEnd="3dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:tint="@android:color/background_dark"
+            card_view:elevation="3dp"
+            card_view:fabSize="mini"
+            card_view:srcCompat="@android:drawable/ic_delete" />
+
+        <TextView
+            android:id="@+id/daysAgoLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/daysBought"
+            android:layout_alignBottom="@+id/daysBought"
+            android:layout_marginEnd="3dp"
+            android:layout_toEndOf="@+id/daysBought"
+            android:text="@string/days_ago" />
+
+        <TextView
+            android:id="@+id/expiryDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/buyDateLabel"
+            android:layout_marginEnd="5dp"
+            android:text="@string/expiry_date" />
+
+        <TextView
+            android:id="@+id/daysLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/daysAgoLabel"
+            android:layout_toEndOf="@+id/daysToExpiry"
+            android:text="@string/days" />
+
+        <TextView
+            android:id="@+id/daysBought"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/expiryDate"
+            android:layout_marginEnd="3dp"
+            android:layout_toEndOf="@+id/buyDate"
+            android:paddingEnd="3dp"
+            android:paddingStart="3dp"
+            android:text="@string/dummy_days" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

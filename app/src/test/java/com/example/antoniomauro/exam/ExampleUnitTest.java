@@ -1,4 +1,4 @@
-package com.example.antoniomauro.foodstorage;
+package com.example.antoniomauro.exam;
 
 import org.junit.Test;
 
