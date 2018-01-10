@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
             //TODO - intent to next page
         } catch (ApiException e) {
             Log.d("ERROR", "ERRORE GENERICO DI LOG IN");
+            e.printStackTrace();
         }
     }
 
