@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         } catch (ApiException e) {
             Log.d("ERROR", "ERRORE GENERICO DI LOG IN");
             e.printStackTrace();
+            Log.w("ERROR", "signInResult:failed code=" + e.getStatusCode());
         }
     }
 
