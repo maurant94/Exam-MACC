@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "222790709255",
+    "project_id": "foodstorge"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222790709255:android:66b649709f8db082",
+        "android_client_info": {
+          "package_name": "it.dis.uniroma1.exam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "222790709255-eirge2omlcvdpatvh73no7c9gc674a9k.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "222790709255-g2s7j39rdvpmhhlgphee6enu41urprpr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.dis.uniroma1.exam",
+            "certificate_hash": "085c7403518e4f435f27f39adf792a7088eef00f"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyIjib5NntZx_UTPXrsrDAjRJQjWY4ldU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

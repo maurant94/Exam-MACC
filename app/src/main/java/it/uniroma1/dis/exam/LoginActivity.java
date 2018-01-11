@@ -29,7 +29,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         //configure
+        //https://developers.google.com/identity/sign-in/android/start-integrating
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("674210243420-6e2o6bsq7oa67pett2qnlv4ot8am34v1.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
         //check already signed user
