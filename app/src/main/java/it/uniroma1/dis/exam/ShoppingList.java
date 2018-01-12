@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,13 +25,18 @@ public class ShoppingList extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Products[] myDataset = {new Products("Latte"),new Products("Pane")};
+    //private Products[] myDataset = {new Products("Latte"),new Products("Pane")};
+    private ArrayList<Products> myDataset= new ArrayList<Products>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        myDataset.add(new Products("Latte", Calendar.getInstance(), Calendar.getInstance()));
+        myDataset.add(new Products("Pane", Calendar.getInstance(), Calendar.getInstance()));
 
         //recycler view
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -80,7 +86,8 @@ public class ShoppingList extends AppCompatActivity
         } else if (id == R.id.nav_food) {
 
         } else if (id == R.id.nav_map) {
-
+            Intent i = new Intent(this,MapsActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_share) {
 
         }

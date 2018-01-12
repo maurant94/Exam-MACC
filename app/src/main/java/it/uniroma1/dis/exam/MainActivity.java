@@ -13,8 +13,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import it.uniroma1.dis.exam.R;
 
@@ -24,7 +26,8 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Products[] myDataset = {new Products("Pane", Calendar.getInstance(), Calendar.getInstance()),new Products("Latte", Calendar.getInstance(), Calendar.getInstance())};
+    //private Products[] myDataset = {new Products("Pane", Calendar.getInstance(), Calendar.getInstance()),new Products("Latte", Calendar.getInstance(), Calendar.getInstance())};
+    private ArrayList<Products> myDataset= new ArrayList<Products>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        myDataset.add(new Products("Pane", Calendar.getInstance(), Calendar.getInstance()));
+        myDataset.add(new Products("Latte", Calendar.getInstance(), Calendar.getInstance()));
 
         //recycler view
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
