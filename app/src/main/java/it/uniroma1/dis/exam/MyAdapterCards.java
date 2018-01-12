@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.antoniomauro.exam.R;
+import it.dis.uniroma1.exam.R;
 
 /**
  * Created by duca on 06/12/17.

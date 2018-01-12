@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.example.antoniomauro.exam.R;
+import it.dis.uniroma1.exam.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         //configure
         //https://developers.google.com/identity/sign-in/android/start-integrating
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("674210243420-6e2o6bsq7oa67pett2qnlv4ot8am34v1.apps.googleusercontent.com")
+                .requestIdToken("222790709255-g2s7j39rdvpmhhlgphee6enu41urprpr.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
         //check already signed user
