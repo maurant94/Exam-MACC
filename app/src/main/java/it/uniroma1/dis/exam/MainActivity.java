@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_exit) {
 
         } else if (id == R.id.nav_food) {
+            //start the shopping list activity
             Intent i = new Intent(this,ShoppingList.class);
             startActivity(i);
 
