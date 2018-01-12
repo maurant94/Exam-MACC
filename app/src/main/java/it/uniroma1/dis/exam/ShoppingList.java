@@ -1,5 +1,6 @@
 package it.uniroma1.dis.exam;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -70,6 +71,11 @@ public class ShoppingList extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_exit) {
+
+        } else if (id == R.id.nav_list) {
+            //start the main list activity
+            Intent i = new Intent(this,MainActivity.class);
+            startActivity(i);
 
         } else if (id == R.id.nav_food) {
 
