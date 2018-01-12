@@ -1,6 +1,6 @@
 package it.uniroma1.dis.exam;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Created by duca on 10/01/18.
@@ -8,10 +8,10 @@ import java.util.Date;
 
 public class Products {
     private String name;
-    private Date buyDate;
-    private Date expDate;
+    private Calendar buyDate;
+    private Calendar expDate;
 
-    public Products(String name, Date buyDate, Date expDate) {
+    public Products(String name, Calendar buyDate, Calendar expDate) {
         this.name = name;
         this.buyDate = buyDate;
         this.expDate = expDate;
@@ -25,11 +25,11 @@ public class Products {
         return name;
     }
 
-    public Date getBuyDate() {
+    public Calendar getBuyDate() {
         return buyDate;
     }
 
-    public Date getExpDate() {
+    public Calendar getExpDate() {
         return expDate;
     }
 }

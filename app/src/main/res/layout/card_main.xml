@@ -37,7 +37,7 @@
             android:tint="@android:color/background_dark"
             card_view:elevation="3dp"
             card_view:fabSize="mini"
-            card_view:srcCompat="@android:drawable/btn_star" />
+            card_view:srcCompat="@drawable/ic_shopping_cart" />
 
         <TextView
             android:id="@+id/expiryDate"

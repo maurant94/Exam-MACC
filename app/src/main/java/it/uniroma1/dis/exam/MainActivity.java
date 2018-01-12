@@ -12,6 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import it.dis.uniroma1.exam.R;
 
 public class MainActivity extends AppCompatActivity
@@ -20,8 +23,8 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private String[] myDataset = {"Pane", "Latte", "Burro", "Caffè", "Zucchero", "Tè", "Cioccolata", "Crostini", "Marmellata", "Sottoli", "Sottaceti"};
-
+    //private String[] myDataset = {"Pane", "Latte", "Burro", "Caffè", "Zucchero", "Tè", "Cioccolata", "Crostini", "Marmellata", "Sottoli", "Sottaceti"};
+    private Products[] myDataset = {new Products("Pane", Calendar.getInstance(), Calendar.getInstance()),new Products("Latte", Calendar.getInstance(), Calendar.getInstance())};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

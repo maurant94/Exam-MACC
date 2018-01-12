@@ -6,6 +6,11 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import it.dis.uniroma1.exam.R;
 
 /**
@@ -13,7 +18,7 @@ import it.dis.uniroma1.exam.R;
  */
 
 public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHolder>{
-    private String[] mDataset;
+    private Products[] mDataset;
 
     //Reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -25,7 +30,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
     }
 
     //Constructor
-    public MyAdapterCards(String[] myDataset) {
+    public MyAdapterCards(Products[] myDataset) {
         mDataset = myDataset;
     }
 
@@ -43,9 +48,27 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
     //Replace the contents of a view
     @Override
     public void onBindViewHolder(MyAdapterCards.ViewHolder holder, int position) {
-        //holder.mLinearLayout.setText(mDataset[position]);
+        //EXAMPLE FORMAT: holder.mLinearLayout.setText(mDataset[position]);
+
+        //print Product name
         TextView ctv = holder.mCardView.findViewById(R.id.cardTextView);
-        ctv.setText(mDataset[position]);
+        ctv.setText(mDataset[position].getName());
+
+        //print Product buy date
+        TextView bDate = holder.mCardView.findViewById(R.id.buyDate);
+        bDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(mDataset[position].getBuyDate().getTime()));
+
+        //calculate and print how many days ago the product has been bought
+        TextView daysBought = holder.mCardView.findViewById(R.id.daysBought);
+        daysBought.setText(String.valueOf(Utilities.daysBetween(Calendar.getInstance(),mDataset[position].getBuyDate())));
+
+        //print Product expiration date
+        TextView expDate = holder.mCardView.findViewById(R.id.expiryDate);
+        expDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(mDataset[position].getExpDate().getTime()));
+
+        //calculate and print how many days until the product expires
+        TextView daysExp = holder.mCardView.findViewById(R.id.daysToExpiry);
+        daysExp.setText(String.valueOf(Utilities.daysBetween(mDataset[position].getBuyDate(),Calendar.getInstance())));
     }
 
     //Return the size of the dataset
