@@ -18,18 +18,17 @@ import java.util.Date;
 
 import it.uniroma1.dis.exam.R;
 
-public class MainActivity extends AppCompatActivity
+public class ShoppingList extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Products[] myDataset = {new Products("Pane", Calendar.getInstance(), Calendar.getInstance()),new Products("Latte", Calendar.getInstance(), Calendar.getInstance())};
-
+    private Products[] myDataset = {new Products("Latte"),new Products("Pane")};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_shopping_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapterCards(myDataset);
+        mAdapter = new MyAdapterCardsShopList(myDataset);
         mRecyclerView.setAdapter(mAdapter);
         //fine
 
@@ -73,14 +72,15 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_exit) {
 
-        } else if (id == R.id.nav_food) {
-            //start the shopping list activity
-            Intent i = new Intent(this,ShoppingList.class);
+        } else if (id == R.id.nav_list) {
+            //start the main list activity
+            Intent i = new Intent(this,MainActivity.class);
             startActivity(i);
 
+        } else if (id == R.id.nav_food) {
+
         } else if (id == R.id.nav_map) {
-            Intent i = new Intent(this,MapsActivity.class);
-            startActivity(i);
+
         } else if (id == R.id.nav_share) {
 
         }
