@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "222790709255",
-    "project_id": "foodstorge"
+    "project_number": "172693033491",
+    "project_id": "peppy-strategy-191909"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:222790709255:android:66b649709f8db082",
+        "mobilesdk_app_id": "1:172693033491:android:42b55105d87b3dbc",
         "android_client_info": {
-          "package_name": "it.dis.uniroma1.exam"
+          "package_name": "it.uniroma1.dis.exam"
         }
       },
       "oauth_client": [
         {
-          "client_id": "222790709255-eirge2omlcvdpatvh73no7c9gc674a9k.apps.googleusercontent.com",
+          "client_id": "172693033491-rbjhj9veqsnr5mlj241sebmrusfea193.apps.googleusercontent.com",
           "client_type": 3
         },
         {
-          "client_id": "222790709255-g2s7j39rdvpmhhlgphee6enu41urprpr.apps.googleusercontent.com",
+          "client_id": "172693033491-2lo271av4g2jgubesk28m17obt6bnbsa.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "it.dis.uniroma1.exam",
+            "package_name": "it.uniroma1.dis.exam",
             "certificate_hash": "085c7403518e4f435f27f39adf792a7088eef00f"
           }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDyIjib5NntZx_UTPXrsrDAjRJQjWY4ldU"
+          "current_key": "AIzaSyCDY3J1CbXiI90QV6XT4p6BI6qsXC2S-To"
         }
       ],
       "services": {

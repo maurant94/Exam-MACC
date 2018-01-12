@@ -2,6 +2,7 @@ package it.uniroma1.dis.exam;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -9,10 +10,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    Market[] markets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +29,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        String json = null;
+        try {
+            InputStream inputStream = getAssets().open("supermarket.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            json = new String(buffer, "UTF-8");
+            Gson gson = new Gson();
+            markets = gson.fromJson(json, Market[].class);
+            Log.d("INFOMIA",markets.length+"");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -38,9 +60,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        for (Market m : markets) {
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(m.getClatitudine(), m.getClongitudine()))
+                    .title(m.toString()));
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(41.8919300,12.5113300)));
     }
 }
