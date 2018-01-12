@@ -79,7 +79,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(i);
 
         } else if (id == R.id.nav_map) {
-
+            Intent i = new Intent(this,MapsActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_share) {
 
         }
