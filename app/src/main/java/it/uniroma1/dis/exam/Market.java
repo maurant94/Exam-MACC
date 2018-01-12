@@ -91,8 +91,7 @@ public class Market {
     @Override
     public String toString(){
         String s = "";
-        s = s + this.getCnome() + "\n"
-                + this.getCcomune() + " (" + this.getCprovincia() + " - " + this.getCregione() + ")";
+        s = this.getCcomune() + " (" + this.getCprovincia() + " - " + this.getCregione() + ")";
         return s;
     }
 }
