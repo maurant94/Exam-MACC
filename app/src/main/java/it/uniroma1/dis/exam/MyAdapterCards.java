@@ -11,7 +11,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import it.dis.uniroma1.exam.R;
+import it.uniroma1.dis.exam.R;
 
 /**
  * Created by duca on 06/12/17.

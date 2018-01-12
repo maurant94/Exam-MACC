@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import java.util.Calendar;
 import java.util.Date;
 
-import it.dis.uniroma1.exam.R;
+import it.uniroma1.dis.exam.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
