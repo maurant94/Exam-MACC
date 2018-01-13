@@ -55,7 +55,9 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps">
+
+        </activity>
         <activity
             android:name="it.uniroma1.dis.exam.ShoppingList"
             android:label="@string/shopping_list"

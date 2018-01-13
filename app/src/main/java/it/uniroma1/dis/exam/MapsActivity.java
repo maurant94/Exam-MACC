@@ -1,15 +1,16 @@
 package it.uniroma1.dis.exam;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -26,15 +27,15 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Permission;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     private static final int MY_PERMISSIONS_REQUEST = 1717;
     private boolean permission_ok = false;
     private GoogleMap mMap;
-    Market[] markets;
+    private AutoCompleteTextView autoComplete;
+    private Market[] markets;
     //PROVIDER FOR GPS
     FusedLocationProviderClient mFusedLocationProviderClient;
 
@@ -63,6 +64,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        //SET UP SPINNER
+        autoComplete = (AutoCompleteTextView) findViewById(R.id.autocompleteTW);
+        //query distinct type
+        List<String> arrayType = Utilities.toArrayString(markets);
+        //Adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, arrayType);
+        autoComplete.setAdapter(adapter);
     }
 
 
@@ -154,6 +163,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             });
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    public void filterMarkets(View view) {
+        String name = autoComplete.getText().toString();
+        if (name == null || name.equals("")) return;
+        //refresh
+        mMap.clear();
+        for (Market m: markets) {
+            if (m.getCnome().toLowerCase().indexOf(name.toLowerCase()) > -1){
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(m.getClatitudine(), m.getClongitudine()))
+                        .snippet(m.toString())
+                        .title(m.getCnome()));
+            }
         }
     }
 }
