@@ -1,5 +1,8 @@
 package it.uniroma1.dis.exam;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -82,7 +85,8 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
             @Override
             public void onClick(View view) {
                 Log.d("Pantry REQUEST", "Requested delete of item "+ position);
-                //mDataset.remove(position);
+                mDataset.remove(position);
+                notifyDataSetChanged();
             }
         });
 
@@ -92,6 +96,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
             @Override
             public void onClick(View view) {
                 Log.d("Pantry REQUEST", "Requested add to cart of element "+ position);
+                //will be implemented with backend
             }
         });
     }

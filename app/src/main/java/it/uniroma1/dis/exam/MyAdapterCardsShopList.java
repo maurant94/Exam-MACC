@@ -73,6 +73,8 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
             @Override
             public void onClick(View view) {
                 Log.d("ShopList REQUEST", "Requested delete of item "+ position);
+                mDataset.remove(position);
+                notifyDataSetChanged();
             }
         });
     }
