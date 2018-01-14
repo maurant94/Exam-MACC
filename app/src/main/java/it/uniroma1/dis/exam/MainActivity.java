@@ -62,9 +62,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myDataset.add(new Products("Pane", Calendar.getInstance(), Calendar.getInstance()));
-        myDataset.add(new Products("Latte", Calendar.getInstance(), Calendar.getInstance()));
-
         //recycler view
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
