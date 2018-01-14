@@ -1,6 +1,11 @@
 package it.uniroma1.dis.exam;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -11,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
@@ -60,6 +66,24 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //scheduler
+        JobScheduler mJobScheduler = (JobScheduler)
+                getSystemService( Context.JOB_SCHEDULER_SERVICE );
+        JobInfo.Builder builder = new JobInfo.Builder( 0,
+                new ComponentName( getApplicationContext(),
+                        JobSchedulerService.class ) );
+        //ANDROID N - scheduler in different way
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            builder.setMinimumLatency(3000);
+            //builder.setPeriodic(3000, 1000); //flexmillis
+        else builder.setPeriodic(3000);
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY); //FIXME ANDROID N
+        JobInfo jInfo = builder.build();
+        Log.e("MYINFI", jInfo.toString());
+        if( mJobScheduler.schedule( jInfo ) <= JobScheduler.RESULT_FAILURE ) {
+            Log.e("error", "something wrong");
+        }
     }
 
     @Override
