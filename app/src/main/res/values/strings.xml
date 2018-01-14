@@ -29,4 +29,7 @@
     </string>
     <string name="title_activity_maps">SuperMarket Map</string>
 
+    <!-- DATA FOR BACKEND-->
+    <string name="url_backend">https://dog.ceo/api/breeds/list/all</string>
+
 </resources>
