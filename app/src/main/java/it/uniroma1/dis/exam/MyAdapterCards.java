@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import it.uniroma1.dis.exam.R;
@@ -78,13 +79,16 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
         TextView ctv = holder.mCardView.findViewById(R.id.cardTextView);
         ctv.setText(mDataset.get(position).getName());
 
+        Date today = new Date();
+
         //print Product buy date
         TextView bDate = holder.mCardView.findViewById(R.id.buyDate);
         bDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(mDataset.get(position).getBuyDate().getTime()));
 
         //calculate and print how many days ago the product has been bought
         TextView daysBought = holder.mCardView.findViewById(R.id.daysBought);
-        daysBought.setText(String.valueOf(Utilities.daysBetweenExpires(mDataset.get(position).getBuyDate())));
+        //daysBought.setText(String.valueOf(Utilities.daysBetweenExpires(mDataset.get(position).getBuyDate())));
+        daysBought.setText(String.valueOf(Utilities.daysBetween(mDataset.get(position).getBuyDate(),today)));
 
         //print Product expiration date
         TextView expDate = holder.mCardView.findViewById(R.id.expiryDate);
@@ -92,7 +96,8 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
 
         //calculate and print how many days until the product expires
         TextView daysExp = holder.mCardView.findViewById(R.id.daysToExpiry);
-        daysExp.setText(String.valueOf(Utilities.daysBetweenExpires(mDataset.get(position).getBuyDate())));
+        //daysExp.setText(String.valueOf(Utilities.daysBetweenExpires(mDataset.get(position).getBuyDate())));
+        daysExp.setText(String.valueOf(Utilities.daysBetween(today,mDataset.get(position).getExpDate())));
 
         //delete button onClick
         FloatingActionButton delete = holder.mCardView.findViewById(R.id.delete);

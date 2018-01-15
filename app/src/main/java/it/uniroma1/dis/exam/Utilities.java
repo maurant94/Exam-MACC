@@ -15,9 +15,9 @@ import java.util.concurrent.TimeUnit;
 public class Utilities {
 
     //NOT MORE USED, ONLY WITH CALENDAR
-    public static long daysBetween(Calendar startDate, Calendar endDate) {
-        long end = endDate.getTimeInMillis();
-        long start = startDate.getTimeInMillis();
+    public static long daysBetween(Date startDate, Date endDate) {
+        long end = endDate.getTime();
+        long start = startDate.getTime();
         return TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
     }
 
