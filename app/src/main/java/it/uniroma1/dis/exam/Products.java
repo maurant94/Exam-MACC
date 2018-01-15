@@ -1,6 +1,7 @@
 package it.uniroma1.dis.exam;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by duca on 10/01/18.
@@ -10,17 +11,18 @@ public class Products {
     private Integer id;
     private String name;
     private String quantity;
-    private Calendar buyDate;
-    private Calendar expDate;
+    private Date buyDate;
+    private Date expDate;
 
-    public Products() {}
-
-    public Products(Integer id, String name, String quantity, Calendar buyDate, Calendar expDate) {
+    public Products(Integer id, String name, String quantity, Date buyDate, Date expDate) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.buyDate = buyDate;
         this.expDate = expDate;
+    }
+
+    public Products() {
     }
 
     public Integer getId() {
@@ -47,19 +49,19 @@ public class Products {
         this.quantity = quantity;
     }
 
-    public Calendar getBuyDate() {
+    public Date getBuyDate() {
         return buyDate;
     }
 
-    public void setBuyDate(Calendar buyDate) {
+    public void setBuyDate(Date buyDate) {
         this.buyDate = buyDate;
     }
 
-    public Calendar getExpDate() {
+    public Date getExpDate() {
         return expDate;
     }
 
-    public void setExpDate(Calendar expDate) {
+    public void setExpDate(Date expDate) {
         this.expDate = expDate;
     }
 }

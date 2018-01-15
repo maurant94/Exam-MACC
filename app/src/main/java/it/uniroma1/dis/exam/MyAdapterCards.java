@@ -84,7 +84,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
 
         //calculate and print how many days ago the product has been bought
         TextView daysBought = holder.mCardView.findViewById(R.id.daysBought);
-        daysBought.setText(String.valueOf(Utilities.daysBetween(Calendar.getInstance(),mDataset.get(position).getBuyDate())));
+        daysBought.setText(String.valueOf(Utilities.daysBetweenExpires(mDataset.get(position).getBuyDate())));
 
         //print Product expiration date
         TextView expDate = holder.mCardView.findViewById(R.id.expiryDate);
@@ -92,7 +92,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
 
         //calculate and print how many days until the product expires
         TextView daysExp = holder.mCardView.findViewById(R.id.daysToExpiry);
-        daysExp.setText(String.valueOf(Utilities.daysBetween(mDataset.get(position).getBuyDate(),Calendar.getInstance())));
+        daysExp.setText(String.valueOf(Utilities.daysBetweenExpires(mDataset.get(position).getBuyDate())));
 
         //delete button onClick
         FloatingActionButton delete = holder.mCardView.findViewById(R.id.delete);

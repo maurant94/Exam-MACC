@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.security.ProtectionDomain;
 import java.util.Calendar;
+import java.util.Date;
 
 public class JobSchedulerService extends JobService {
 
@@ -62,7 +63,7 @@ public class JobSchedulerService extends JobService {
                         public void onResponse(JSONArray response) {
                             try {
                                 Log.e("info", response.toString());
-                                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create(); //FIXME
+                                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create(); //FIXME
                                 Products[] products = gson.fromJson(response.toString(), Products[].class);
                                 //NOW BUILD NOTIFICATION
                                 if (products != null && products.length > 0) {
@@ -70,7 +71,7 @@ public class JobSchedulerService extends JobService {
                                     Integer len = 0;
                                     Calendar today = Calendar.getInstance();
                                     for(Products p : products)
-                                        if (Utilities.daysBetween(today, p.getExpDate()) > 3)
+                                        if (p.getExpDate().after(new Date()))
                                             len++;
                                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "MY_CHANNEL_ID")
                                         .setSmallIcon(R.drawable.ic_shopping_cart)

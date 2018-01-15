@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -12,10 +13,19 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class Utilities {
+
+    //NOT MORE USED, ONLY WITH CALENDAR
     public static long daysBetween(Calendar startDate, Calendar endDate) {
         long end = endDate.getTimeInMillis();
         long start = startDate.getTimeInMillis();
         return TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
+    }
+
+    //NOT MORE USED, ONLY WITH CALENDAR
+    public static long daysBetweenExpires(Date date) {
+        Date today = new Date();
+        long diff = today.getTime() - date.getTime();
+        return TimeUnit.MILLISECONDS.toDays(Math.abs(diff));
     }
 
     public static List<String> toArrayString(Market[] list) {
