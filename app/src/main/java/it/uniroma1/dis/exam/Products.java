@@ -1,5 +1,9 @@
 package it.uniroma1.dis.exam;
 
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,6 +24,24 @@ public class Products {
         this.quantity = quantity;
         this.buyDate = buyDate;
         this.expDate = expDate;
+    }
+
+    public Products(String name, String quantity, String buyDate, String expDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            this.buyDate = sdf.parse(buyDate);
+        } catch (ParseException e) {
+            Log.d("DATA", "ERRORE DATE BUY" + e.getMessage());
+            this.buyDate = new Date();
+        }
+        try {
+            this.expDate = sdf.parse(expDate);
+        } catch (ParseException e) {
+            Log.d("DATA", "ERRORE DATE EXP" + e.getMessage());
+            this.expDate = new Date();
+        }
+        this.name = name;
+        this.quantity = quantity;
     }
 
     public Products() {

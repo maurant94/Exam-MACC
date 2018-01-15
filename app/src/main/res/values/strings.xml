@@ -29,6 +29,9 @@
     </string>
     <string name="title_activity_maps">SuperMarket Map</string>
 
+    <!-- String extra json -->
+    <string name="extra_product">MY_EXTRA_PRODUCT</string>
+
     <!-- DATA FOR BACKEND-->
     <string name="url_backend">https://foodstorage-macc.herokuapp.com/</string>
 
