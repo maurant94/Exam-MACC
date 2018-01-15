@@ -1,5 +1,6 @@
 package it.uniroma1.dis.exam;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,8 +45,9 @@ import it.uniroma1.dis.exam.R;
 public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHolder>{
     private ArrayList<Products> mDataset;
     private Context ctx;
-    private static final String GET_ALL_OPERATION = "MYUNIQUEGETALL";
+    private Activity act;
     private static final String POST_OPERATION = "MYUNIQUEPOST";
+    private static final String SHOW_OPERATION = "MYUNIQUEGET";
     private static final String DELETE_OPERATION = "MYUNIQUEDELETE";
 
     //Reference to the views for each data item
@@ -58,9 +60,10 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
     }
 
     //Constructor
-    public MyAdapterCards(ArrayList<Products> myDataset,Context ctx) {
+    public MyAdapterCards(ArrayList<Products> myDataset,Context ctx, Activity act) {
         mDataset = myDataset;
         this.ctx=ctx;
+        this.act = act;
     }
 
     //Create new views
@@ -82,6 +85,13 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
         //print Product name
         TextView ctv = holder.mCardView.findViewById(R.id.cardTextView);
         ctv.setText(mDataset.get(position).getName());
+        //show for edit
+        ctv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MainAdapterTask(SHOW_OPERATION,mDataset.get(position).getId()).execute();
+            }
+        });
 
         Date today = new Date();
 
@@ -102,6 +112,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
         TextView daysExp = holder.mCardView.findViewById(R.id.daysToExpiry);
         //daysExp.setText(String.valueOf(Utilities.daysBetweenExpires(mDataset.get(position).getBuyDate())));
         daysExp.setText(String.valueOf(Utilities.daysBetween(today,mDataset.get(position).getExpDate())));
+
 
         //delete button onClick
         FloatingActionButton delete = holder.mCardView.findViewById(R.id.delete);
@@ -216,6 +227,36 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
                     );
                     // add it to the RequestQueue
                     queue.add(postRequest);
+                    break;
+
+                case SHOW_OPERATION:
+                    String customUrl = pantryItemUrl;
+                    JsonObjectRequest showRequest = new JsonObjectRequest(Request.Method.GET, customUrl, null,
+                            new Response.Listener<JSONObject>()
+                            {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        Log.e("Response", response.toString());
+                                        Intent i = new Intent(ctx, ProductActivity.class);
+                                        String extraString = ctx.getString(R.string.extra_product);
+                                        i.putExtra(extraString, response.toString());
+                                        act.startActivityForResult(i, MainActivity.MY_ACTIVITY_FOR_RESULT_UPDATE);
+                                    }catch(Exception e){
+                                        Log.e("Error", e.getMessage());
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Error.Response", error.toString());
+                                }
+                            }
+                    );
+                    // add it to the RequestQueue
+                    queue.add(showRequest);
                     break;
 
                 default: break;

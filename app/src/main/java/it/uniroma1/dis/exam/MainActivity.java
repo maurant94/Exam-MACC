@@ -45,9 +45,8 @@ public class MainActivity extends AppCompatActivity
     private static final String GET_ALL_OPERATION = "MYUNIQUEGETALL";
     private static final String POST_OPERATION = "MYUNIQUEPOST";
     private static final String UPDATE_OPERATION = "MYUNIQUEPUT";
-    private static final String SHOW_OPERATION = "MYUNIQUEGET";
     private static final int MY_ACTIVITY_FOR_RESULT_ADD = 1317;
-    private static final int MY_ACTIVITY_FOR_RESULT_UPDATE = 1317;
+    public static final int MY_ACTIVITY_FOR_RESULT_UPDATE = 1318;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapterCards(myDataset,getApplicationContext());
+        mAdapter = new MyAdapterCards(myDataset,getApplicationContext(),MainActivity.this);
         mRecyclerView.setAdapter(mAdapter);
         //fine
 
@@ -182,7 +181,7 @@ public class MainActivity extends AppCompatActivity
                                         if (products != null && products.length > 0) {
                                             myDataset = new ArrayList<>(Arrays.asList(products));
                                             //then update
-                                            mAdapter = new MyAdapterCards(myDataset,getApplicationContext());
+                                            mAdapter = new MyAdapterCards(myDataset,getApplicationContext(),MainActivity.this);
                                             mRecyclerView.setAdapter(mAdapter);
                                         }
                                     }catch(Exception e){
@@ -237,6 +236,7 @@ public class MainActivity extends AppCompatActivity
                     break;
 
                 case UPDATE_OPERATION:
+                    String customUrl = url + "/" + prod.getId();
                     jsonString = gson.toJson(prod);
                     JSONObject objPut = null;
                     try {
@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity
                         Log.e("Response", e.getMessage());
                         break;
                     }
-                    JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, url, objPut,
+                    JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, customUrl, objPut,
                             new Response.Listener<JSONObject>()
                             {
                                 @Override
@@ -270,36 +270,6 @@ public class MainActivity extends AppCompatActivity
                     queue.add(putRequest);
                     break;
 
-                case SHOW_OPERATION:
-                    String customUrl = url + "/" + prod.getId();
-                    JsonObjectRequest showRequest = new JsonObjectRequest(Request.Method.GET, customUrl, null,
-                            new Response.Listener<JSONObject>()
-                            {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
-                                        Log.e("Response", response.toString());
-                                        Intent i = new Intent(getApplicationContext(), ProductActivity.class);
-                                        String extraString = getApplicationContext().getString(R.string.extra_product);
-                                        i.putExtra(extraString, response.toString());
-                                        startActivityForResult(i, MY_ACTIVITY_FOR_RESULT_UPDATE);
-                                    }catch(Exception e){
-                                        Log.e("Error", e.getMessage());
-                                    }
-                                }
-                            },
-                            new Response.ErrorListener()
-                            {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.e("Error.Response", error.toString());
-                                }
-                            }
-                    );
-                    // add it to the RequestQueue
-                    queue.add(showRequest);
-                    break;
-
 
                 default: break;
             }
@@ -316,17 +286,22 @@ public class MainActivity extends AppCompatActivity
                 String extraString = getApplicationContext().getString(R.string.extra_product);
                 Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
                 new FoodStorageTask(POST_OPERATION,p).execute();
-                Toast.makeText(getApplicationContext(), "Transazione aggiunta", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Add with success", Toast.LENGTH_SHORT).show();
+                //now update so redo get all
+                new FoodStorageTask(GET_ALL_OPERATION).execute();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Nothing
             }
         } else if (requestCode == MY_ACTIVITY_FOR_RESULT_UPDATE) {
             if(resultCode == Activity.RESULT_OK){
+                Log.e("uffa","qui");
                 String extraString = getApplicationContext().getString(R.string.extra_product);
                 Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
                 new FoodStorageTask(UPDATE_OPERATION,p).execute();
-                Toast.makeText(getApplicationContext(), "Transazione aggiunta", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Update with success", Toast.LENGTH_SHORT).show();
+                //now update so redo get all
+                new FoodStorageTask(GET_ALL_OPERATION).execute();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Nothing

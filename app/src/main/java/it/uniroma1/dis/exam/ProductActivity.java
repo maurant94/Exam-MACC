@@ -100,9 +100,10 @@ public class ProductActivity extends Activity {
         if (name.equals("") || quantity.equals("") || buyDate.equals("") || expDate.equals(""))
             Toast.makeText(ProductActivity.this, "COMPILA I CAMPI MANCANTI", Toast.LENGTH_SHORT).show();
         else {
-            Products p = new Products(name, quantity, buyDate, expDate);
+            Products prod = new Products(name, quantity, buyDate, expDate);
+            if (p.getId() != null) prod.setId(p.getId());
             String extraString = getApplicationContext().getString(R.string.extra_product);
-            returnIntent.putExtra(extraString, (new Gson()).toJson(p));
+            returnIntent.putExtra(extraString, (new Gson()).toJson(prod));
             setResult(Activity.RESULT_OK, returnIntent); //or result_canceled
             finish();
         }
