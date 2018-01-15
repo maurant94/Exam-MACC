@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapterCards(myDataset);
+        mAdapter = new MyAdapterCards(myDataset,getApplicationContext());
         mRecyclerView.setAdapter(mAdapter);
         //fine
 
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity
                                         if (products != null && products.length > 0) {
                                             myDataset = new ArrayList<>(Arrays.asList(products));
                                             //then update
-                                            mAdapter = new MyAdapterCards(myDataset);
+                                            mAdapter = new MyAdapterCards(myDataset,getApplicationContext());
                                             mRecyclerView.setAdapter(mAdapter);
                                         }
                                     }catch(Exception e){

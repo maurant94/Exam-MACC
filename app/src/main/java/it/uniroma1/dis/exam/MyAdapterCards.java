@@ -13,12 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
@@ -41,6 +43,7 @@ import it.uniroma1.dis.exam.R;
 
 public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHolder>{
     private ArrayList<Products> mDataset;
+    private Context ctx;
     private static final String GET_ALL_OPERATION = "MYUNIQUEGETALL";
     private static final String POST_OPERATION = "MYUNIQUEPOST";
     private static final String DELETE_OPERATION = "MYUNIQUEDELETE";
@@ -55,8 +58,9 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
     }
 
     //Constructor
-    public MyAdapterCards(ArrayList<Products> myDataset) {
+    public MyAdapterCards(ArrayList<Products> myDataset,Context ctx) {
         mDataset = myDataset;
+        this.ctx=ctx;
     }
 
     //Create new views
@@ -106,6 +110,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
             public void onClick(View view) {
                 Log.d("Pantry REQUEST", "Requested delete of item "+ position);
                 mDataset.remove(position);
+                new MainAdapterTask(DELETE_OPERATION,mDataset.get(position).getId()).execute();
                 notifyDataSetChanged();
             }
         });
@@ -129,28 +134,53 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
         return mDataset.size();
     }
 
-    /*
-    private class FoodStorageTask extends AsyncTask<Void, Void, Void> {
+    private class MainAdapterTask extends AsyncTask<Void, Void, Void> {
 
         private String op;
         private Products prod;
+        private Integer id;
 
-        public FoodStorageTask(String op) {
+        public MainAdapterTask(String op) {
             this.op = op;
         }
-        public FoodStorageTask(String op, Products prod) {
+        public MainAdapterTask(String op, Products prod) {
             this.op = op;
             this.prod = prod;
+        }
+        public MainAdapterTask(String op, Integer id) {
+            this.op = op;
+            this.id = id;
         }
 
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String url =  getString(R.string.url_backend);
-            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            String pantryItemUrl =  ctx.getString(R.string.url_backend)+"pantryitems/"+id;
+            RequestQueue queue = Volley.newRequestQueue(ctx);
             // prepare the Request
             switch (op) {
-                case GET_ALL_OPERATION:
+                case DELETE_OPERATION:
+                    StringRequest dr = new StringRequest(Request.Method.DELETE, pantryItemUrl,
+                            new Response.Listener<String>()
+                            {
+                                @Override
+                                public void onResponse(String response) {
+                                    // response
+                                    Log.e("Response", response.toString());
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error.
+
+                                }
+                            }
+                    );
+                    queue.add(dr);
+                    break;
+                /*case GET_ALL_OPERATION:
                     JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                             new Response.Listener<JSONObject>()
                             {
@@ -218,7 +248,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
                     // add it to the RequestQueue
                     queue.add(postRequest);
                     break;
-
+                */
                 default: break;
             }
 
@@ -226,5 +256,4 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
         }
 
     }
-    */
 }
