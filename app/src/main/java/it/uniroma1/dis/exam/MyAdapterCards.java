@@ -218,75 +218,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
                     // add it to the RequestQueue
                     queue.add(postRequest);
                     break;
-                /*case GET_ALL_OPERATION:
-                    JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                            new Response.Listener<JSONObject>()
-                            {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
-                                        Log.e("Response", response.toString());
-                                        Gson gson = new Gson();
-                                        Products[] products = gson.fromJson(response.toString(), Products[].class);
-                                        if (products != null && products.length > 0) {
-                                            myDataset = new ArrayList<>(Arrays.asList(products));
-                                            //then update
-                                            mAdapter = new MyAdapterCards(myDataset);
-                                            mRecyclerView.setAdapter(mAdapter);
-                                        }
-                                    }catch(Exception e){
-                                        Log.e("Response", e.getMessage());
-                                    }
-                                }
-                            },
-                            new Response.ErrorListener()
-                            {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.e("Error.Response", error.toString());
-                                }
-                            }
-                    );
-                    // add it to the RequestQueue
-                    queue.add(getRequest);
-                    break;
 
-                case POST_OPERATION:
-                    Gson gson = new Gson();
-                    String jsonString = gson.toJson(prod);
-                    JSONObject obj = null;
-                    try {
-                        obj = new JSONObject(jsonString);
-                    } catch (JSONException e) {
-                        Log.e("Response", e.getMessage());
-                        break;
-                    }
-                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, null,
-                            new Response.Listener<JSONObject>()
-                            {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
-                                        Log.e("Response", response.toString());
-                                        //result ok so show a snackbar TODO
-
-                                    }catch(Exception e){
-                                        Log.e("Response", e.getMessage());
-                                    }
-                                }
-                            },
-                            new Response.ErrorListener()
-                            {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.e("Error.Response", error.toString());
-                                }
-                            }
-                    );
-                    // add it to the RequestQueue
-                    queue.add(postRequest);
-                    break;
-                */
                 default: break;
             }
 

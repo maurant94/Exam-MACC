@@ -1,5 +1,6 @@
 package it.uniroma1.dis.exam;
 
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
@@ -86,4 +98,96 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
     public int getItemCount() {
         return mDataset.size();
     }
+    /*
+    private class MainAdapterTask extends AsyncTask<Void, Void, Void> {
+
+        private String op;
+        private Products prod;
+        private Integer id;
+
+        public MainAdapterTask(String op) {
+            this.op = op;
+        }
+        public MainAdapterTask(String op, Products prod) {
+            this.op = op;
+            this.prod = prod;
+        }
+        public MainAdapterTask(String op, Integer id) {
+            this.op = op;
+            this.id = id;
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String pantryItemUrl =  ctx.getString(R.string.url_backend)+"pantryitems/"+id;
+            String listUrl =  ctx.getString(R.string.url_backend)+"listitems";
+            RequestQueue queue = Volley.newRequestQueue(ctx);
+            // prepare the Request
+            switch (op) {
+                case DELETE_OPERATION:
+                    StringRequest dr = new StringRequest(Request.Method.DELETE, pantryItemUrl,
+                            new Response.Listener<String>()
+                            {
+                                @Override
+                                public void onResponse(String response) {
+                                    // response
+                                    Log.e("Response", response.toString());
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error.
+
+                                }
+                            }
+                    );
+                    queue.add(dr);
+                    break;
+
+                case POST_OPERATION:
+                    Gson gson = new Gson();
+                    String jsonString = gson.toJson(prod);
+                    JSONObject obj = null;
+                    try {
+                        obj = new JSONObject(jsonString);
+                    } catch (JSONException e) {
+                        Log.e("Response", e.getMessage());
+                        break;
+                    }
+                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, listUrl, obj,
+                            new Response.Listener<JSONObject>()
+                            {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        Log.e("Response", response.toString());
+                                        //result ok so show a snackbar TODO
+
+                                    }catch(Exception e){
+                                        Log.e("Response", e.getMessage());
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Error.Response", error.toString());
+                                }
+                            }
+                    );
+                    // add it to the RequestQueue
+                    queue.add(postRequest);
+                    break;
+
+                default: break;
+            }
+
+            return null;
+        }
+
+    }*/
 }
