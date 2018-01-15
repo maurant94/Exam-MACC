@@ -28,10 +28,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +64,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //start asyncTask
+        new FoodStorageTask(GET_ALL_OPERATION).execute();
 
         //recycler view
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -153,16 +159,17 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String url = getString(R.string.url_backend);
+            String url = getString(R.string.url_backend) + "pantryitems";
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             // prepare the Request
             switch (op) {
                 case GET_ALL_OPERATION:
-                    JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                            new Response.Listener<JSONObject>()
+                    // prepare the Request
+                    JsonArrayRequest getRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                            new Response.Listener<JSONArray>()
                             {
                                 @Override
-                                public void onResponse(JSONObject response) {
+                                public void onResponse(JSONArray response) {
                                     try {
                                         Log.e("Response", response.toString());
                                         Gson gson = new Gson();
@@ -174,7 +181,7 @@ public class MainActivity extends AppCompatActivity
                                             mRecyclerView.setAdapter(mAdapter);
                                         }
                                     }catch(Exception e){
-                                        Log.e("Response", e.getMessage());
+                                        Log.e("Error", e.getMessage());
                                     }
                                 }
                             },
