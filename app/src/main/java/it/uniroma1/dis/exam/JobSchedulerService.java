@@ -13,13 +13,17 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.security.ProtectionDomain;
+import java.util.Calendar;
 
 public class JobSchedulerService extends JobService {
 
@@ -48,25 +52,30 @@ public class JobSchedulerService extends JobService {
         @Override
         protected Void doInBackground(Void... voids) {
             //TODO CALCOLARE I PRODOTTI IN SCADENZA E MANDARE NOTIFICA
-            String url = getString(R.string.url_backend);
+            String url = getString(R.string.url_backend) + "pantryitems"; //URL PER FILTRARE IN MODO CUSTOM ? FIXME
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             // prepare the Request
-            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                    new Response.Listener<JSONObject>()
+            JsonArrayRequest getRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONArray>()
                     {
                         @Override
-                        public void onResponse(JSONObject response) {
+                        public void onResponse(JSONArray response) {
                             try {
-                                Log.e("Response", response.toString());
-                                Gson gson = new Gson();
+                                Log.e("info", response.toString());
+                                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create(); //FIXME
                                 Products[] products = gson.fromJson(response.toString(), Products[].class);
                                 //NOW BUILD NOTIFICATION
                                 if (products != null && products.length > 0) {
+                                    Log.e("info", products[0].getExpDate() +"");
+                                    Integer len = 0;
+                                    Calendar today = Calendar.getInstance();
+                                    for(Products p : products)
+                                        if (Utilities.daysBetween(today, p.getExpDate()) > 3)
+                                            len++;
                                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "MY_CHANNEL_ID")
                                         .setSmallIcon(R.drawable.ic_shopping_cart)
                                         .setContentTitle("EXPIRING PRODUCTS")
-                                        .setContentText(products.length + " PRODUCTS ARE EXPIRING");
-
+                                        .setContentText(len + " PRODUCTS ARE EXPIRING");
                                     Intent resultIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                     PendingIntent resultPendingIntent = PendingIntent.getActivity(
                                             getApplicationContext(),
@@ -80,7 +89,7 @@ public class JobSchedulerService extends JobService {
                                     mNotifyMgr.notify(mNotificationId, mBuilder.build());
                                 }
                             }catch(Exception e){
-                                Log.e("Response", e.getMessage());
+                                Log.e("Error", e.getMessage());
                             }
                         }
                     },
