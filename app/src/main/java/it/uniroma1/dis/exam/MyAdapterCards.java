@@ -109,8 +109,8 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
             @Override
             public void onClick(View view) {
                 Log.d("Pantry REQUEST", "Requested delete of item "+ position);
-                mDataset.remove(position);
                 new MainAdapterTask(DELETE_OPERATION,mDataset.get(position).getId()).execute();
+                mDataset.remove(position);
                 notifyDataSetChanged();
             }
         });
