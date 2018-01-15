@@ -122,6 +122,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
             public void onClick(View view) {
                 Log.d("Pantry REQUEST", "Requested add to cart of element "+ position);
                 //will be implemented with backend
+                new MainAdapterTask(POST_OPERATION,mDataset.get(position)).execute();
             }
         });
     }
@@ -156,6 +157,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
         @Override
         protected Void doInBackground(Void... voids) {
             String pantryItemUrl =  ctx.getString(R.string.url_backend)+"pantryitems/"+id;
+            String listUrl =  ctx.getString(R.string.url_backend)+"listitems";
             RequestQueue queue = Volley.newRequestQueue(ctx);
             // prepare the Request
             switch (op) {
@@ -179,6 +181,42 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
                             }
                     );
                     queue.add(dr);
+                    break;
+
+                case POST_OPERATION:
+                    Gson gson = new Gson();
+                    String jsonString = gson.toJson(prod);
+                    JSONObject obj = null;
+                    try {
+                        obj = new JSONObject(jsonString);
+                    } catch (JSONException e) {
+                        Log.e("Response", e.getMessage());
+                        break;
+                    }
+                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, listUrl, obj,
+                            new Response.Listener<JSONObject>()
+                            {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        Log.e("Response", response.toString());
+                                        //result ok so show a snackbar TODO
+
+                                    }catch(Exception e){
+                                        Log.e("Response", e.getMessage());
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Error.Response", error.toString());
+                                }
+                            }
+                    );
+                    // add it to the RequestQueue
+                    queue.add(postRequest);
                     break;
                 /*case GET_ALL_OPERATION:
                     JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
