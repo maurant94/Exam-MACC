@@ -34,5 +34,6 @@
 
     <!-- DATA FOR BACKEND-->
     <string name="url_backend">https://foodstorage-macc.herokuapp.com/</string>
+    <string name="productAdd">Product</string>
 
 </resources>

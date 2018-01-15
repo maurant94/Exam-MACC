@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ProductActivity extends AppCompatActivity {
+public class ProductActivity extends Activity {
 
     private Products p = null;
 
@@ -40,6 +40,7 @@ public class ProductActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
+        this.setFinishOnTouchOutside(false);
         //date pickers
         mDateExpireDisplay = (TextView) findViewById(R.id.textExpireDate);
         mDateBuyDisplay = (TextView) findViewById(R.id.textBuyDate);
