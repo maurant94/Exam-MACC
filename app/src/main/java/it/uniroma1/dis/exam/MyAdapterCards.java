@@ -121,7 +121,6 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
             @Override
             public void onClick(View view) {
                 Log.d("Pantry REQUEST", "Requested add to cart of element "+ position);
-                //will be implemented with backend
                 new MainAdapterTask(POST_OPERATION,mDataset.get(position)).execute();
             }
         });

@@ -1,5 +1,6 @@
 package it.uniroma1.dis.exam;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
@@ -26,6 +27,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import it.uniroma1.dis.exam.R;
 
@@ -35,6 +37,10 @@ import it.uniroma1.dis.exam.R;
 
 public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsShopList.ViewHolder>{
     private ArrayList<Products> mDataset;
+    private Context ctx;
+    private static final String GET_ALL_OPERATION = "MYUNIQUEGETALL";
+    private static final String POST_OPERATION = "MYUNIQUEPOST";
+    private static final String DELETE_OPERATION = "MYUNIQUEDELETE";
 
     //Reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -46,8 +52,9 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
     }
 
     //Constructor
-    public MyAdapterCardsShopList(ArrayList<Products> myDataset) {
+    public MyAdapterCardsShopList(ArrayList<Products> myDataset,Context ctx) {
         mDataset = myDataset;
+        this.ctx=ctx;
     }
 
     //Create new views
@@ -76,6 +83,7 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
             @Override
             public void onClick(View view) {
                 Log.d("ShopList REQUEST", "Requested add to shelf of item "+ position);
+                new ShoppingListAdapterTask(POST_OPERATION,mDataset.get(position)).execute();
             }
         });
 
@@ -85,6 +93,7 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
             @Override
             public void onClick(View view) {
                 Log.d("ShopList REQUEST", "Requested delete of item "+ position);
+                new ShoppingListAdapterTask(DELETE_OPERATION,mDataset.get(position).getId()).execute();
                 mDataset.remove(position);
                 notifyDataSetChanged();
             }
@@ -98,21 +107,21 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
     public int getItemCount() {
         return mDataset.size();
     }
-    /*
-    private class MainAdapterTask extends AsyncTask<Void, Void, Void> {
+
+    private class ShoppingListAdapterTask extends AsyncTask<Void, Void, Void> {
 
         private String op;
         private Products prod;
         private Integer id;
 
-        public MainAdapterTask(String op) {
+        public ShoppingListAdapterTask(String op) {
             this.op = op;
         }
-        public MainAdapterTask(String op, Products prod) {
+        public ShoppingListAdapterTask(String op, Products prod) {
             this.op = op;
             this.prod = prod;
         }
-        public MainAdapterTask(String op, Integer id) {
+        public ShoppingListAdapterTask(String op, Integer id) {
             this.op = op;
             this.id = id;
         }
@@ -120,13 +129,13 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String pantryItemUrl =  ctx.getString(R.string.url_backend)+"pantryitems/"+id;
-            String listUrl =  ctx.getString(R.string.url_backend)+"listitems";
+            String listItemUrl =  ctx.getString(R.string.url_backend)+"listitems/"+id;
+            String pantryUrl =  ctx.getString(R.string.url_backend)+"pantryitems";
             RequestQueue queue = Volley.newRequestQueue(ctx);
             // prepare the Request
             switch (op) {
                 case DELETE_OPERATION:
-                    StringRequest dr = new StringRequest(Request.Method.DELETE, pantryItemUrl,
+                    StringRequest dr = new StringRequest(Request.Method.DELETE, listItemUrl,
                             new Response.Listener<String>()
                             {
                                 @Override
@@ -149,6 +158,8 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
 
                 case POST_OPERATION:
                     Gson gson = new Gson();
+                    prod.setExpDate(new Date());
+                    prod.setBuyDate(new Date());
                     String jsonString = gson.toJson(prod);
                     JSONObject obj = null;
                     try {
@@ -157,7 +168,7 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
                         Log.e("Response", e.getMessage());
                         break;
                     }
-                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, listUrl, obj,
+                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, pantryUrl, obj,
                             new Response.Listener<JSONObject>()
                             {
                                 @Override
@@ -189,5 +200,5 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
             return null;
         }
 
-    }*/
+    }
 }

@@ -63,7 +63,7 @@ public class ShoppingList extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapterCardsShopList(myDataset);
+        mAdapter = new MyAdapterCardsShopList(myDataset,getApplicationContext());
         mRecyclerView.setAdapter(mAdapter);
         //fine
 
@@ -150,7 +150,7 @@ public class ShoppingList extends AppCompatActivity
                                         if (products != null && products.length > 0) {
                                             myDataset = new ArrayList<>(Arrays.asList(products));
                                             //then update
-                                            mAdapter = new MyAdapterCardsShopList(myDataset);
+                                            mAdapter = new MyAdapterCardsShopList(myDataset,getApplicationContext());
                                             mRecyclerView.setAdapter(mAdapter);
                                         }
                                     }catch(Exception e){
