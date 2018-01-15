@@ -61,7 +61,11 @@
             android:name=".JobSchedulerService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <activity android:name=".ProductActivity" ></activity>
+        <activity
+            android:name=".ProductActivity"
+            android:label="@string/productAdd"
+            android:theme="@android:style/Theme.Dialog"
+            android:excludeFromRecents="true"></activity>
     </application>
 
 </manifest>
