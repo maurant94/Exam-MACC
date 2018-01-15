@@ -158,8 +158,8 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
 
                 case POST_OPERATION:
                     Gson gson = new Gson();
-                    prod.setExpDate(new Date());
                     prod.setBuyDate(new Date());
+                    prod.setExpDate(new Date());
                     String jsonString = gson.toJson(prod);
                     JSONObject obj = null;
                     try {
