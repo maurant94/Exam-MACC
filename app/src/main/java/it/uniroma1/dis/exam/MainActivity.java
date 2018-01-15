@@ -1,9 +1,7 @@
 package it.uniroma1.dis.exam;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.app.Activity;
 import android.app.job.JobInfo;
-import android.app.job.JobParameters;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +20,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,7 +31,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,17 +38,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import it.uniroma1.dis.exam.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String GET_ALL_OPERATION = "MYUNIQUEGETALL";
     private static final String POST_OPERATION = "MYUNIQUEPOST";
+    private static final String UPDATE_OPERATION = "MYUNIQUEPUT";
+    private static final String SHOW_OPERATION = "MYUNIQUEGET";
+    private static final int MY_ACTIVITY_FOR_RESULT_ADD = 1317;
+    private static final int MY_ACTIVITY_FOR_RESULT_UPDATE = 1317;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -79,7 +76,13 @@ public class MainActivity extends AppCompatActivity
         //fine
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        //TODO ACTION
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), ProductActivity.class);
+                startActivityForResult(i, MY_ACTIVITY_FOR_RESULT_ADD);
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -98,9 +101,9 @@ public class MainActivity extends AppCompatActivity
                         JobSchedulerService.class ) );
         //ANDROID N - scheduler in different way
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            builder.setMinimumLatency(3000);
+            builder.setMinimumLatency(30000000);
             //builder.setPeriodic(3000, 1000); //flexmillis
-        else builder.setPeriodic(3000);
+        else builder.setPeriodic(30000000);
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY); //FIXME ANDROID N
         JobInfo jInfo = builder.build();
         Log.e("MYINFI", jInfo.toString());
@@ -161,6 +164,8 @@ public class MainActivity extends AppCompatActivity
         protected Void doInBackground(Void... voids) {
             String url = getString(R.string.url_backend) + "pantryitems";
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            Gson gson = new Gson();
+            String jsonString;
             // prepare the Request
             switch (op) {
                 case GET_ALL_OPERATION:
@@ -198,8 +203,7 @@ public class MainActivity extends AppCompatActivity
                     break;
 
                 case POST_OPERATION:
-                    Gson gson = new Gson();
-                    String jsonString = gson.toJson(prod);
+                    jsonString = gson.toJson(prod);
                     JSONObject obj = null;
                     try {
                         obj = new JSONObject(jsonString);
@@ -207,14 +211,13 @@ public class MainActivity extends AppCompatActivity
                         Log.e("Response", e.getMessage());
                         break;
                     }
-                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, null,
+                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, obj,
                             new Response.Listener<JSONObject>()
                             {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
                                         Log.e("Response", response.toString());
-                                        //result ok so show a snackbar TODO
 
                                     }catch(Exception e){
                                         Log.e("Response", e.getMessage());
@@ -233,10 +236,101 @@ public class MainActivity extends AppCompatActivity
                     queue.add(postRequest);
                     break;
 
+                case UPDATE_OPERATION:
+                    jsonString = gson.toJson(prod);
+                    JSONObject objPut = null;
+                    try {
+                        objPut = new JSONObject(jsonString);
+                    } catch (JSONException e) {
+                        Log.e("Response", e.getMessage());
+                        break;
+                    }
+                    JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, url, objPut,
+                            new Response.Listener<JSONObject>()
+                            {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        Log.e("Response", response.toString());
+
+                                    }catch(Exception e){
+                                        Log.e("Response", e.getMessage());
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Error.Response", error.toString());
+                                }
+                            }
+                    );
+                    // add it to the RequestQueue
+                    queue.add(putRequest);
+                    break;
+
+                case SHOW_OPERATION:
+                    String customUrl = url + "/" + prod.getId();
+                    JsonObjectRequest showRequest = new JsonObjectRequest(Request.Method.GET, customUrl, null,
+                            new Response.Listener<JSONObject>()
+                            {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        Log.e("Response", response.toString());
+                                        Intent i = new Intent(getApplicationContext(), ProductActivity.class);
+                                        String extraString = getApplicationContext().getString(R.string.extra_product);
+                                        i.putExtra(extraString, response.toString());
+                                        startActivityForResult(i, MY_ACTIVITY_FOR_RESULT_UPDATE);
+                                    }catch(Exception e){
+                                        Log.e("Error", e.getMessage());
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Error.Response", error.toString());
+                                }
+                            }
+                    );
+                    // add it to the RequestQueue
+                    queue.add(showRequest);
+                    break;
+
+
                 default: break;
             }
 
             return null;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == MY_ACTIVITY_FOR_RESULT_ADD) {
+            if(resultCode == Activity.RESULT_OK){
+                String extraString = getApplicationContext().getString(R.string.extra_product);
+                Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
+                new FoodStorageTask(POST_OPERATION,p).execute();
+                Toast.makeText(getApplicationContext(), "Transazione aggiunta", Toast.LENGTH_SHORT).show();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Nothing
+            }
+        } else if (requestCode == MY_ACTIVITY_FOR_RESULT_UPDATE) {
+            if(resultCode == Activity.RESULT_OK){
+                String extraString = getApplicationContext().getString(R.string.extra_product);
+                Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
+                new FoodStorageTask(UPDATE_OPERATION,p).execute();
+                Toast.makeText(getApplicationContext(), "Transazione aggiunta", Toast.LENGTH_SHORT).show();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Nothing
+            }
         }
     }
 }
