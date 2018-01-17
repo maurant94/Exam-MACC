@@ -18,7 +18,7 @@ public class Utilities {
     public static long daysBetween(Date startDate, Date endDate) {
         long end = endDate.getTime();
         long start = startDate.getTime();
-        return TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
+        return TimeUnit.MILLISECONDS.toDays(end - start);
     }
 
     //NOT MORE USED, ONLY WITH CALENDAR
