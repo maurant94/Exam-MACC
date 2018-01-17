@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,6 +46,7 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
     private static final String POST_OPERATION = "MYUNIQUEPOST";
     private static final String DELETE_OPERATION = "MYUNIQUEDELETE";
     private static final String SHOW_OPERATION = "MYUNIQUEGET";
+    private static final String ADD_TO_SHELF_OPERATION = "MYADDTOSHELFOPERATION";
 
     //Reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -56,15 +58,10 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
     }
 
     //Constructor
-    public MyAdapterCardsShopList(ArrayList<Products> myDataset,Context ctx) {
+    public MyAdapterCardsShopList(ArrayList<Products> myDataset,Context ctx,Activity act) {
         mDataset = myDataset;
         this.ctx=ctx;
-    }
-    //Constructor
-    public MyAdapterCardsShopList(ArrayList<Products> myDataset,Context ctx, Activity act) {
-        mDataset = myDataset;
-        this.ctx=ctx;
-        this.act = act;
+        this.act=act;
     }
 
     //Create new views
@@ -100,7 +97,8 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
             @Override
             public void onClick(View view) {
                 Log.d("ShopList REQUEST", "Requested add to shelf of item "+ position);
-                new ShoppingListAdapterTask(POST_OPERATION,mDataset.get(position)).execute();
+                //new ShoppingListAdapterTask(POST_OPERATION,mDataset.get(position)).execute();
+                new ShoppingListAdapterTask(ADD_TO_SHELF_OPERATION,mDataset.get(position).getId()).execute();
             }
         });
 
@@ -148,6 +146,8 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
         protected Void doInBackground(Void... voids) {
             String listItemUrl =  ctx.getString(R.string.url_backend)+"listitems/"+id;
             String pantryUrl =  ctx.getString(R.string.url_backend)+"pantryitems";
+            String customUrl;
+            JsonObjectRequest showRequest;
             RequestQueue queue = Volley.newRequestQueue(ctx);
             // prepare the Request
             switch (op) {
@@ -212,8 +212,8 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
                     break;
 
                 case SHOW_OPERATION:
-                    String customUrl = listItemUrl;
-                    JsonObjectRequest showRequest = new JsonObjectRequest(Request.Method.GET, customUrl, null,
+                    customUrl = listItemUrl;
+                    showRequest = new JsonObjectRequest(Request.Method.GET, customUrl, null,
                             new Response.Listener<JSONObject>()
                             {
                                 @Override
@@ -240,6 +240,38 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
                     // add it to the RequestQueue
                     queue.add(showRequest);
                     break;
+
+                case ADD_TO_SHELF_OPERATION:
+                    customUrl = listItemUrl;
+                    showRequest = new JsonObjectRequest(Request.Method.GET, customUrl, null,
+                            new Response.Listener<JSONObject>()
+                            {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        Log.e("Response", response.toString());
+                                        Intent i = new Intent(ctx, ProductActivity.class);
+                                        String extraString = ctx.getString(R.string.extra_product);
+                                        i.putExtra(extraString, response.toString());
+                                        act.startActivityForResult(i, ShoppingList.MY_ACTIVITY_FOR_RESULT_ADD_TO_PANTRY);
+                                    }catch(Exception e){
+                                        Log.e("Error", e.getMessage());
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Error.Response", error.toString());
+                                }
+                            }
+                    );
+                    // add it to the RequestQueue
+                    queue.add(showRequest);
+                    break;
+
+
 
                 default: break;
             }

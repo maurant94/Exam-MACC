@@ -43,6 +43,8 @@ public class ShoppingList extends AppCompatActivity
 
     private static final String GET_ALL_OPERATION = "MYUNIQUEGETALL";
     private static final String POST_OPERATION = "MYUNIQUEPOST";
+    public static final int MY_ACTIVITY_FOR_RESULT_ADD_TO_PANTRY = 1319;
+    private static final String POST_TO_PANTRY_OPERATION = "MYADDELEMENTTOPANTRY";
     private static final String UPDATE_OPERATION = "MYUNIQUEPUT";
     private static final int MY_ACTIVITY_FOR_RESULT_ADD = 1717;
     public static final int MY_ACTIVITY_FOR_RESULT_UPDATE = 1718;
@@ -69,7 +71,7 @@ public class ShoppingList extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapterCardsShopList(myDataset,getApplicationContext());
+        mAdapter = new MyAdapterCardsShopList(myDataset,getApplicationContext(),ShoppingList.this);
         mRecyclerView.setAdapter(mAdapter);
         //fine
 
@@ -157,6 +159,19 @@ public class ShoppingList extends AppCompatActivity
                 //Nothing
             }
         }
+        if (requestCode == MY_ACTIVITY_FOR_RESULT_ADD_TO_PANTRY) {
+            if (resultCode == Activity.RESULT_OK) {
+                String extraString = getApplicationContext().getString(R.string.extra_product);
+                Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
+                new FoodStorageShopListTask(POST_TO_PANTRY_OPERATION, p).execute();
+                Toast.makeText(getApplicationContext(), "Add with success", Toast.LENGTH_SHORT).show();
+                //now update so redo get all
+                new FoodStorageShopListTask(GET_ALL_OPERATION).execute();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Nothing
+            }
+        }
     }
 
     private class FoodStorageShopListTask extends AsyncTask<Void, Void, Void> {
@@ -176,10 +191,13 @@ public class ShoppingList extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... voids) {
             String url = getString(R.string.url_backend) + "listitems";
+            String pantryUrl = getString(R.string.url_backend) + "pantryitems";
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-            String jsonString;
-            Gson gson = new Gson();
             // prepare the Request
+            Gson gson;
+            String jsonString;
+            JSONObject obj;
+            JsonObjectRequest postRequest;
             switch (op) {
                 case GET_ALL_OPERATION:
                     // prepare the Request
@@ -195,7 +213,7 @@ public class ShoppingList extends AppCompatActivity
                                         if (products != null && products.length > 0) {
                                             myDataset = new ArrayList<>(Arrays.asList(products));
                                             //then update
-                                            mAdapter = new MyAdapterCardsShopList(myDataset,getApplicationContext(), ShoppingList.this);
+                                            mAdapter = new MyAdapterCardsShopList(myDataset, getApplicationContext(), ShoppingList.this);
                                             mRecyclerView.setAdapter(mAdapter);
                                         }
                                     }catch(Exception e){
@@ -216,31 +234,29 @@ public class ShoppingList extends AppCompatActivity
                     break;
 
                 case POST_OPERATION:
+                    gson = new Gson();
                     jsonString = gson.toJson(prod);
-                    Log.e("Response", jsonString);
-                    JSONObject obj = null;
+                    obj = null;
                     try {
                         obj = new JSONObject(jsonString);
                     } catch (JSONException e) {
                         Log.e("Response", e.getMessage());
                         break;
                     }
-                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, obj,
-                            new Response.Listener<JSONObject>()
-                            {
+                    postRequest = new JsonObjectRequest(Request.Method.POST, url, obj,
+                            new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
                                         Log.e("Response", response.toString());
                                         //result ok so show a snackbar TODO
 
-                                    }catch(Exception e){
+                                    } catch (Exception e) {
                                         Log.e("Response", e.getMessage());
                                     }
                                 }
                             },
-                            new Response.ErrorListener()
-                            {
+                            new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     Log.e("Error.Response", error.toString());
@@ -253,6 +269,7 @@ public class ShoppingList extends AppCompatActivity
 
                 case UPDATE_OPERATION:
                     String customUrl = url + "/" + prod.getId();
+                    gson = new Gson();
                     jsonString = gson.toJson(prod);
                     JSONObject objPut = null;
                     try {
@@ -286,7 +303,44 @@ public class ShoppingList extends AppCompatActivity
                     queue.add(putRequest);
                     break;
 
-                default: break;
+                case POST_TO_PANTRY_OPERATION:
+                    gson = new Gson();
+                    //prod.setBuyDate(new Date());
+                    //prod.setExpDate(new Date());
+                    jsonString = gson.toJson(prod);
+                    obj = null;
+                    try {
+                        obj = new JSONObject(jsonString);
+                    } catch (JSONException e) {
+                        Log.e("Response", e.getMessage());
+                        break;
+                    }
+                    postRequest = new JsonObjectRequest(Request.Method.POST, pantryUrl, obj,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        Log.e("Response", response.toString());
+                                        //result ok so show a snackbar TODO
+
+                                    } catch (Exception e) {
+                                        Log.e("Response", e.getMessage());
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Error.Response", error.toString());
+                                }
+                            }
+                    );
+                    // add it to the RequestQueue
+                    queue.add(postRequest);
+                    break;
+
+                default:
+                    break;
             }
 
             return null;
