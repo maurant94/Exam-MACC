@@ -3,6 +3,8 @@ package it.uniroma1.dis.exam;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
@@ -103,6 +105,12 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
         TextView daysBought = holder.mCardView.findViewById(R.id.daysBought);
         //daysBought.setText(String.valueOf(Utilities.daysBetweenExpires(mDataset.get(position).getBuyDate())));
         daysBought.setText(String.valueOf(Utilities.daysBetween(mDataset.get(position).getBuyDate(),today)));
+        daysBought.setTextColor(Color.BLUE);
+        daysBought.setTypeface(null, Typeface.BOLD);
+
+        //get reference to "days ago" label and set BLUE
+        TextView daysAgoLabel = holder.mCardView.findViewById(R.id.daysAgoLabel);
+        daysAgoLabel.setTextColor(Color.BLUE);
 
         //print Product expiration date
         TextView expDate = holder.mCardView.findViewById(R.id.expiryDate);
@@ -111,7 +119,26 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
         //calculate and print how many days until the product expires
         TextView daysExp = holder.mCardView.findViewById(R.id.daysToExpiry);
         //daysExp.setText(String.valueOf(Utilities.daysBetweenExpires(mDataset.get(position).getBuyDate())));
-        daysExp.setText(String.valueOf(Utilities.daysBetween(today,mDataset.get(position).getExpDate())));
+        long daysToExp=Utilities.daysBetween(today,mDataset.get(position).getExpDate());
+        daysExp.setText(String.valueOf(daysToExp));
+        daysExp.setTypeface(null, Typeface.BOLD);
+        TextView daysExpLabel = holder.mCardView.findViewById(R.id.daysLabel);
+        if(daysToExp>=3)
+        {
+            daysExp.setTextColor(Color.GREEN);
+            daysExpLabel.setTextColor(Color.GREEN);
+        }
+        else if(daysToExp<3 && daysToExp>0)
+        {
+            daysExp.setTextColor(Color.YELLOW);
+            daysExpLabel.setTextColor(Color.YELLOW);
+        }
+        else if(daysToExp<=0)
+        {
+            daysExp.setTextColor(Color.RED);
+            daysExpLabel.setTextColor(Color.RED);
+        }
+
 
 
         //delete button onClick
