@@ -84,7 +84,7 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
 
         //print Product name
         TextView ctv = holder.mCardView.findViewById(R.id.cardTextView);
-        ctv.setText(mDataset.get(position).getName());
+        ctv.setText(mDataset.get(position).getName()+" ("+mDataset.get(position).getQuantity()+")");
         //show for edit
         ctv.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -75,7 +75,7 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
 
         //print Product name
         TextView ctv = holder.mCardView.findViewById(R.id.cardTextView);
-        ctv.setText(mDataset.get(position).getName());
+        ctv.setText(mDataset.get(position).getName()+" ("+mDataset.get(position).getQuantity()+")");
 
         //add to shelf button onClick
         FloatingActionButton addToShelf = holder.mCardView.findViewById(R.id.addToShelf);
