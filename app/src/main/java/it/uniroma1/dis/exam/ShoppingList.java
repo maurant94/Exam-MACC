@@ -1,5 +1,6 @@
 package it.uniroma1.dis.exam;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -40,6 +43,9 @@ public class ShoppingList extends AppCompatActivity
 
     private static final String GET_ALL_OPERATION = "MYUNIQUEGETALL";
     private static final String POST_OPERATION = "MYUNIQUEPOST";
+    private static final String UPDATE_OPERATION = "MYUNIQUEPUT";
+    private static final int MY_ACTIVITY_FOR_RESULT_ADD = 1717;
+    public static final int MY_ACTIVITY_FOR_RESULT_UPDATE = 1718;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -68,7 +74,13 @@ public class ShoppingList extends AppCompatActivity
         //fine
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        //TODO ACTION
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), ListShoppingActivity.class);
+                startActivityForResult(i, MY_ACTIVITY_FOR_RESULT_ADD);
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -116,6 +128,37 @@ public class ShoppingList extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == MY_ACTIVITY_FOR_RESULT_ADD) {
+            if(resultCode == Activity.RESULT_OK){
+                String extraString = getApplicationContext().getString(R.string.extra_product);
+                Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
+                new FoodStorageShopListTask(POST_OPERATION,p).execute();
+                Toast.makeText(getApplicationContext(), "Add with success", Toast.LENGTH_SHORT).show();
+                //now update so redo get all
+                new FoodStorageShopListTask(GET_ALL_OPERATION).execute();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Nothing
+            }
+        } else if (requestCode == MY_ACTIVITY_FOR_RESULT_UPDATE) {
+            if(resultCode == Activity.RESULT_OK){
+                Log.e("uffa","qui");
+                String extraString = getApplicationContext().getString(R.string.extra_product);
+                Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
+                new FoodStorageShopListTask(UPDATE_OPERATION,p).execute();
+                Toast.makeText(getApplicationContext(), "Update with success", Toast.LENGTH_SHORT).show();
+                //now update so redo get all
+                new FoodStorageShopListTask(GET_ALL_OPERATION).execute();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Nothing
+            }
+        }
+    }
+
     private class FoodStorageShopListTask extends AsyncTask<Void, Void, Void> {
 
         private String op;
@@ -134,6 +177,8 @@ public class ShoppingList extends AppCompatActivity
         protected Void doInBackground(Void... voids) {
             String url = getString(R.string.url_backend) + "listitems";
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            String jsonString;
+            Gson gson = new Gson();
             // prepare the Request
             switch (op) {
                 case GET_ALL_OPERATION:
@@ -150,7 +195,7 @@ public class ShoppingList extends AppCompatActivity
                                         if (products != null && products.length > 0) {
                                             myDataset = new ArrayList<>(Arrays.asList(products));
                                             //then update
-                                            mAdapter = new MyAdapterCardsShopList(myDataset,getApplicationContext());
+                                            mAdapter = new MyAdapterCardsShopList(myDataset,getApplicationContext(), ShoppingList.this);
                                             mRecyclerView.setAdapter(mAdapter);
                                         }
                                     }catch(Exception e){
@@ -171,8 +216,8 @@ public class ShoppingList extends AppCompatActivity
                     break;
 
                 case POST_OPERATION:
-                    Gson gson = new Gson();
-                    String jsonString = gson.toJson(prod);
+                    jsonString = gson.toJson(prod);
+                    Log.e("Response", jsonString);
                     JSONObject obj = null;
                     try {
                         obj = new JSONObject(jsonString);
@@ -180,7 +225,7 @@ public class ShoppingList extends AppCompatActivity
                         Log.e("Response", e.getMessage());
                         break;
                     }
-                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, null,
+                    JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, obj,
                             new Response.Listener<JSONObject>()
                             {
                                 @Override
@@ -204,6 +249,41 @@ public class ShoppingList extends AppCompatActivity
                     );
                     // add it to the RequestQueue
                     queue.add(postRequest);
+                    break;
+
+                case UPDATE_OPERATION:
+                    String customUrl = url + "/" + prod.getId();
+                    jsonString = gson.toJson(prod);
+                    JSONObject objPut = null;
+                    try {
+                        objPut = new JSONObject(jsonString);
+                    } catch (JSONException e) {
+                        Log.e("Response", e.getMessage());
+                        break;
+                    }
+                    JsonObjectRequest putRequest = new JsonObjectRequest(Request.Method.PUT, customUrl, objPut,
+                            new Response.Listener<JSONObject>()
+                            {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        Log.e("Response", response.toString());
+
+                                    }catch(Exception e){
+                                        Log.e("Response", e.getMessage());
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Error.Response", error.toString());
+                                }
+                            }
+                    );
+                    // add it to the RequestQueue
+                    queue.add(putRequest);
                     break;
 
                 default: break;

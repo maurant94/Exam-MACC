@@ -1,6 +1,8 @@
 package it.uniroma1.dis.exam;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
@@ -38,9 +40,11 @@ import it.uniroma1.dis.exam.R;
 public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsShopList.ViewHolder>{
     private ArrayList<Products> mDataset;
     private Context ctx;
+    private Activity act;
     private static final String GET_ALL_OPERATION = "MYUNIQUEGETALL";
     private static final String POST_OPERATION = "MYUNIQUEPOST";
     private static final String DELETE_OPERATION = "MYUNIQUEDELETE";
+    private static final String SHOW_OPERATION = "MYUNIQUEGET";
 
     //Reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -55,6 +59,12 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
     public MyAdapterCardsShopList(ArrayList<Products> myDataset,Context ctx) {
         mDataset = myDataset;
         this.ctx=ctx;
+    }
+    //Constructor
+    public MyAdapterCardsShopList(ArrayList<Products> myDataset,Context ctx, Activity act) {
+        mDataset = myDataset;
+        this.ctx=ctx;
+        this.act = act;
     }
 
     //Create new views
@@ -76,6 +86,13 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
         //print Product name
         TextView ctv = holder.mCardView.findViewById(R.id.cardTextView);
         ctv.setText(mDataset.get(position).getName()+" ("+mDataset.get(position).getQuantity()+")");
+        //show for edit
+        ctv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ShoppingListAdapterTask(SHOW_OPERATION,mDataset.get(position).getId()).execute();
+            }
+        });
 
         //add to shelf button onClick
         FloatingActionButton addToShelf = holder.mCardView.findViewById(R.id.addToShelf);
@@ -192,6 +209,36 @@ public class MyAdapterCardsShopList extends RecyclerView.Adapter<MyAdapterCardsS
                     );
                     // add it to the RequestQueue
                     queue.add(postRequest);
+                    break;
+
+                case SHOW_OPERATION:
+                    String customUrl = listItemUrl;
+                    JsonObjectRequest showRequest = new JsonObjectRequest(Request.Method.GET, customUrl, null,
+                            new Response.Listener<JSONObject>()
+                            {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        Log.e("Response", response.toString());
+                                        Intent i = new Intent(ctx, ListShoppingActivity.class);
+                                        String extraString = ctx.getString(R.string.extra_product);
+                                        i.putExtra(extraString, response.toString());
+                                        act.startActivityForResult(i, ShoppingList.MY_ACTIVITY_FOR_RESULT_UPDATE);
+                                    }catch(Exception e){
+                                        Log.e("Error", e.getMessage());
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener()
+                            {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Error.Response", error.toString());
+                                }
+                            }
+                    );
+                    // add it to the RequestQueue
+                    queue.add(showRequest);
                     break;
 
                 default: break;

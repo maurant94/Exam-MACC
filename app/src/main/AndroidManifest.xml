@@ -62,8 +62,14 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
-            android:name=".ProductActivity"
-            android:label="@string/productAdd"
+        android:name=".ProductActivity"
+        android:label="@string/productAdd"
+        android:theme="@android:style/Theme.Dialog"
+        android:excludeFromRecents="true"></activity>
+
+        <activity
+            android:name=".ListShoppingActivity"
+            android:label="@string/listAdd"
             android:theme="@android:style/Theme.Dialog"
             android:excludeFromRecents="true"></activity>
     </application>

@@ -47,6 +47,11 @@ public class Products {
     public Products() {
     }
 
+    public Products(String name, String quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
     public Integer getId() {
         return id;
     }
