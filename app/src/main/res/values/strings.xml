@@ -32,9 +32,10 @@
     <!-- String extra json -->
     <string name="extra_product">MY_EXTRA_PRODUCT</string>
 
-    <!-- DATA FOR BACKEND-->
-    <string name="url_backend">https://foodstorage-macc.herokuapp.com/</string>
+    <!-- DATA FOR BACKEND  https://foodstorage-macc.herokuapp.com/ or -->
+    <string name="url_backend">http://192.168.1.3:3000/</string>
     <string name="productAdd">Product</string>
     <string name="listAdd">Shopping Item</string>
+    <string name="server_Client_id">172693033491-rbjhj9veqsnr5mlj241sebmrusfea193.apps.googleusercontent.com</string>
 
 </resources>
