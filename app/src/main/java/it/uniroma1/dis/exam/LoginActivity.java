@@ -1,6 +1,8 @@
 package it.uniroma1.dis.exam;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -86,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             // prepare the Request
             Gson gson = new Gson();
-            String jsonString = account.getIdToken();
+            final String jsonString = account.getIdToken();
             JSONObject obj = null;
             try {
                 obj = new JSONObject();
@@ -101,6 +103,11 @@ public class LoginActivity extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
                             try {
                                 Log.e("Response", response.toString());
+                                SharedPreferences loginData = getApplicationContext().getSharedPreferences(
+                                        getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = loginData.edit();
+                                editor.putString("idToken",jsonString);
+                                editor.commit();
                             }catch(Exception e){
                                 Log.e("Error", e.getMessage());
                             }
