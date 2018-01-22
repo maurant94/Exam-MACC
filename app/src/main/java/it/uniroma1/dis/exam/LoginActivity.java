@@ -106,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                                 SharedPreferences loginData = getApplicationContext().getSharedPreferences(
                                         getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = loginData.edit();
-                                editor.putString("idToken",jsonString);
+                                editor.putString("idToken",jsonString.trim());
                                 editor.commit();
                             }catch(Exception e){
                                 Log.e("Error", e.getMessage());

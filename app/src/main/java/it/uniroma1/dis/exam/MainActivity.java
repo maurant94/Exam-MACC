@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         SharedPreferences loginData = getApplicationContext().getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        token = loginData.getString("idToken", null);
+        token = loginData.getString("idToken", "").trim();
 
         //start asyncTask
         new FoodStorageTask(GET_ALL_OPERATION).execute();
