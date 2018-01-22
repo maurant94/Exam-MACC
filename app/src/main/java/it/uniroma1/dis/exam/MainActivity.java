@@ -6,6 +6,7 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -38,6 +40,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity
     private static final String UPDATE_OPERATION = "MYUNIQUEPUT";
     private static final int MY_ACTIVITY_FOR_RESULT_ADD = 1317;
     public static final int MY_ACTIVITY_FOR_RESULT_UPDATE = 1318;
+
+    private String token = null;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -60,6 +66,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        SharedPreferences loginData = getApplicationContext().getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        token = loginData.getString("idToken", null);
 
         //start asyncTask
         new FoodStorageTask(GET_ALL_OPERATION).execute();
@@ -196,7 +205,15 @@ public class MainActivity extends AppCompatActivity
                                     Log.e("Error.Response", error.toString());
                                 }
                             }
-                    );
+                    ){
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("Authorization", "Token token= "+ token);
+                            return params;
+                        }
+
+                    };
                     // add it to the RequestQueue
                     queue.add(getRequest);
                     break;
@@ -230,7 +247,15 @@ public class MainActivity extends AppCompatActivity
                                     Log.e("Error.Response", error.toString());
                                 }
                             }
-                    );
+                    ){
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("Authorization", "Token token= "+ token);
+                            return params;
+                        }
+
+                    };
                     // add it to the RequestQueue
                     queue.add(postRequest);
                     break;
@@ -265,7 +290,15 @@ public class MainActivity extends AppCompatActivity
                                     Log.e("Error.Response", error.toString());
                                 }
                             }
-                    );
+                    ){
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("Authorization", "Token token= "+ token);
+                            return params;
+                        }
+
+                    };
                     // add it to the RequestQueue
                     queue.add(putRequest);
                     break;

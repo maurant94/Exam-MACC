@@ -124,8 +124,8 @@ public class LoginActivity extends AppCompatActivity {
             // add it to the RequestQueue
             queue.add(getRequest);
 
-            //Intent i = new Intent(this,MainActivity.class);
-            //startActivity(i);
+            Intent i = new Intent(this,MainActivity.class);
+            startActivity(i);
 
             //TODO - intent to next page
         } catch (ApiException e) {
