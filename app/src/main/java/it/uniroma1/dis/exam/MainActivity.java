@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     private static final int MY_ACTIVITY_FOR_RESULT_ADD = 1317;
     public static final int MY_ACTIVITY_FOR_RESULT_UPDATE = 1318;
 
-    private String token = null;
+    public static String token = null;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;

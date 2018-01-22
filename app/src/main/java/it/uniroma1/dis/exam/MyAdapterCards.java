@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -36,7 +37,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.uniroma1.dis.exam.R;
 
@@ -216,7 +219,15 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
 
                                 }
                             }
-                    );
+                    ){
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("Authorization", "Token token= "+ MainActivity.token);
+                            return params;
+                        }
+
+                    };
                     queue.add(dr);
                     break;
 
@@ -251,7 +262,15 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
                                     Log.e("Error.Response", error.toString());
                                 }
                             }
-                    );
+                    ){
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("Authorization", "Token token= "+ MainActivity.token);
+                            return params;
+                        }
+
+                    };
                     // add it to the RequestQueue
                     queue.add(postRequest);
                     break;
@@ -281,7 +300,15 @@ public class MyAdapterCards extends RecyclerView.Adapter<MyAdapterCards.ViewHold
                                     Log.e("Error.Response", error.toString());
                                 }
                             }
-                    );
+                    ){
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("Authorization", "Token token= "+ MainActivity.token);
+                            return params;
+                        }
+
+                    };
                     // add it to the RequestQueue
                     queue.add(showRequest);
                     break;
