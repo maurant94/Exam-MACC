@@ -79,9 +79,11 @@ public class ProductActivity extends Activity {
             text = (TextView) findViewById(R.id.editQuantity);
             text.setText(p.getQuantity() + "");
             text = (TextView) findViewById(R.id.textBuyDate);
-            text.setText(p.getBuyDate() + "");
+            if(p.getBuyDate()!=null)
+                text.setText(p.getBuyDate() + "");
             text = (TextView) findViewById(R.id.textExpireDate);
-            text.setText(p.getExpDate() + "");
+            if(p.getExpDate()!=null)
+                text.setText(p.getExpDate() + "");
         }
 
         //see if is an EDIT or ADD
