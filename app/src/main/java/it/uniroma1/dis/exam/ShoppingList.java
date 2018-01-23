@@ -165,8 +165,6 @@ public class ShoppingList extends AppCompatActivity
                 Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
                 new FoodStorageShopListTask(POST_OPERATION,p).execute();
                 Toast.makeText(getApplicationContext(), "Add with success", Toast.LENGTH_SHORT).show();
-                //now update so redo get all
-                new FoodStorageShopListTask(GET_ALL_OPERATION).execute();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Nothing
@@ -178,8 +176,6 @@ public class ShoppingList extends AppCompatActivity
                 Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
                 new FoodStorageShopListTask(UPDATE_OPERATION,p).execute();
                 Toast.makeText(getApplicationContext(), "Update with success", Toast.LENGTH_SHORT).show();
-                //now update so redo get all
-                new FoodStorageShopListTask(GET_ALL_OPERATION).execute();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Nothing
@@ -191,8 +187,6 @@ public class ShoppingList extends AppCompatActivity
                 Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
                 new FoodStorageShopListTask(POST_TO_PANTRY_OPERATION, p).execute();
                 Toast.makeText(getApplicationContext(), "Add with success", Toast.LENGTH_SHORT).show();
-                //now update so redo get all
-                new FoodStorageShopListTask(GET_ALL_OPERATION).execute();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Nothing
@@ -283,7 +277,8 @@ public class ShoppingList extends AppCompatActivity
                                 public void onResponse(JSONObject response) {
                                     try {
                                         Log.e("Response", response.toString());
-                                        //result ok so show a snackbar TODO
+                                        //now update so redo get all
+                                        new FoodStorageShopListTask(GET_ALL_OPERATION).execute();
 
                                     } catch (Exception e) {
                                         Log.e("Response", e.getMessage());
@@ -327,6 +322,8 @@ public class ShoppingList extends AppCompatActivity
                                 public void onResponse(JSONObject response) {
                                     try {
                                         Log.e("Response", response.toString());
+                                        //now update so redo get all
+                                        new FoodStorageShopListTask(GET_ALL_OPERATION).execute();
 
                                     }catch(Exception e){
                                         Log.e("Response", e.getMessage());
@@ -371,7 +368,8 @@ public class ShoppingList extends AppCompatActivity
                                 public void onResponse(JSONObject response) {
                                     try {
                                         Log.e("Response", response.toString());
-                                        //result ok so show a snackbar TODO
+                                        //now update so redo get all FIXME FORSE INUTILE
+                                        new FoodStorageShopListTask(GET_ALL_OPERATION).execute();
 
                                     } catch (Exception e) {
                                         Log.e("Response", e.getMessage());

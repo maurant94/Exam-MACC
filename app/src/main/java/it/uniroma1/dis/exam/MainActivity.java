@@ -257,6 +257,8 @@ public class MainActivity extends AppCompatActivity
                                 public void onResponse(JSONObject response) {
                                     try {
                                         Log.e("Response", response.toString());
+                                        //update
+                                        new FoodStorageTask(GET_ALL_OPERATION).execute();
 
                                     }catch(Exception e){
                                         Log.e("Response", e.getMessage());
@@ -300,6 +302,8 @@ public class MainActivity extends AppCompatActivity
                                 public void onResponse(JSONObject response) {
                                     try {
                                         Log.e("Response", response.toString());
+                                        //update
+                                        new FoodStorageTask(GET_ALL_OPERATION).execute();
 
                                     }catch(Exception e){
                                         Log.e("Response", e.getMessage());
@@ -343,8 +347,6 @@ public class MainActivity extends AppCompatActivity
                 Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
                 new FoodStorageTask(POST_OPERATION,p).execute();
                 Toast.makeText(getApplicationContext(), "Add with success", Toast.LENGTH_SHORT).show();
-                //now update so redo get all
-                new FoodStorageTask(GET_ALL_OPERATION).execute();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Nothing
@@ -356,8 +358,6 @@ public class MainActivity extends AppCompatActivity
                 Products p = (new Gson()).fromJson(data.getStringExtra(extraString), Products.class);
                 new FoodStorageTask(UPDATE_OPERATION,p).execute();
                 Toast.makeText(getApplicationContext(), "Update with success", Toast.LENGTH_SHORT).show();
-                //now update so redo get all
-                new FoodStorageTask(GET_ALL_OPERATION).execute();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Nothing
