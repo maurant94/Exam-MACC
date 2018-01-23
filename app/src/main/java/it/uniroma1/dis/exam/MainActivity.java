@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,8 +21,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -32,12 +36,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -99,6 +107,20 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header = navigationView.getHeaderView(0);
+        String temp = loginData.getString("displayName", "").trim();
+        ((TextView) header.findViewById(R.id.accountName)).setText(temp);
+        temp = loginData.getString("email", "").trim();
+        ((TextView) header.findViewById(R.id.accountMail)).setText(temp);
+        temp = loginData.getString("url_photo", "").trim();
+        if (!temp.equals("")) {
+            ImageView imgProfilePic = (ImageView) header.findViewById(R.id.imageViewProfile);
+            Glide.with(getApplicationContext()).load(temp)
+                    .thumbnail(0.1f)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imgProfilePic);
+        }
         navigationView.setNavigationItemSelectedListener(this);
 
         //scheduler
@@ -145,8 +167,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_map) {
             Intent i = new Intent(this,MapsActivity.class);
             startActivity(i);
-        } else if (id == R.id.nav_share) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -339,6 +359,19 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Nothing
             }
+        }
+    }
+
+    //not used
+    private Drawable loadImageFromWebOperations(String url) {
+        try {
+            Log.e("errore", url);
+            InputStream is = (InputStream) new URL(url).openStream();
+            Drawable d = Drawable.createFromStream(is, "profileImage");
+            return d;
+        } catch (Exception e) {
+            Log.e("errore", e.getMessage()+"");
+            return null;
         }
     }
 }

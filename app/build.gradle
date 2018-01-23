@@ -36,4 +36,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:11.6.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.volley:volley:1.1.0'
+    // glide is added to load the g+ profile image. Ignore if you want
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }

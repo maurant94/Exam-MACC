@@ -108,6 +108,9 @@ public class LoginActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor = loginData.edit();
                                 editor.putString("idToken",jsonString.trim());
                                 editor.putString("user_id", account.getId());
+                                editor.putString("url_photo", account.getPhotoUrl().toString());
+                                editor.putString("displayName", account.getDisplayName());
+                                editor.putString("email", account.getEmail());
                                 editor.commit();
                             }catch(Exception e){
                                 Log.e("Error", e.getMessage());
