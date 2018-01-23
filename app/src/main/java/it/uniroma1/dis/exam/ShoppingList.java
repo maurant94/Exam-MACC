@@ -1,7 +1,9 @@
 package it.uniroma1.dis.exam;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -26,6 +30,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -94,6 +100,22 @@ public class ShoppingList extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        SharedPreferences loginData = getApplicationContext().getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        View header = navigationView.getHeaderView(0);
+        String temp = loginData.getString("displayName", "").trim();
+        ((TextView) header.findViewById(R.id.accountName)).setText(temp);
+        temp = loginData.getString("email", "").trim();
+        ((TextView) header.findViewById(R.id.accountMail)).setText(temp);
+        temp = loginData.getString("url_photo", "").trim();
+        if (!temp.equals("")) {
+            ImageView imgProfilePic = (ImageView) header.findViewById(R.id.imageViewProfile);
+            Glide.with(getApplicationContext()).load(temp)
+                    .thumbnail(0.1f)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imgProfilePic);
+        }
         navigationView.setNavigationItemSelectedListener(this);
     }
 
