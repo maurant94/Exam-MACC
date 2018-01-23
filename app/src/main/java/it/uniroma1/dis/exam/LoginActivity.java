@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Log.e("token",account.getIdToken());
             //try log in auth/google_oauth2
             String url = getString(R.string.url_backend) + "signin";
@@ -107,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                                         getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = loginData.edit();
                                 editor.putString("idToken",jsonString.trim());
+                                editor.putString("user_id", account.getId());
                                 editor.commit();
                             }catch(Exception e){
                                 Log.e("Error", e.getMessage());

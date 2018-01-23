@@ -109,9 +109,9 @@ public class MainActivity extends AppCompatActivity
                         JobSchedulerService.class ) );
         //ANDROID N - scheduler in different way
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            builder.setMinimumLatency(30000000);
+            builder.setMinimumLatency(3000); //FIXME TEST VALUE
             //builder.setPeriodic(3000, 1000); //flexmillis
-        else builder.setPeriodic(30000000);
+        else builder.setPeriodic(3000);
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY); //FIXME ANDROID N
         JobInfo jInfo = builder.build();
         Log.e("MYINFI", jInfo.toString());

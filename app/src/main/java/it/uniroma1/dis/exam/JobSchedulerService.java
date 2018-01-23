@@ -4,7 +4,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -20,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.ProtectionDomain;
@@ -53,30 +56,35 @@ public class JobSchedulerService extends JobService {
         @Override
         protected Void doInBackground(Void... voids) {
             //TODO CALCOLARE I PRODOTTI IN SCADENZA E MANDARE NOTIFICA
-            String url = getString(R.string.url_backend) + "pantryitems"; //URL PER FILTRARE IN MODO CUSTOM ? FIXME
+            String url = getString(R.string.url_backend) + "schedule";
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            JSONObject obj = null;
+            try {
+                SharedPreferences loginData = getApplicationContext().getSharedPreferences(
+                        getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                String userid = loginData.getString("user_id", "0").trim();
+                obj = new JSONObject();
+                obj.put("user_id", userid);
+            } catch (JSONException e) {
+                Log.e("Response", e.getMessage());
+                jobFinished( params, true );
+                return null;
+            }
             // prepare the Request
-            JsonArrayRequest getRequest = new JsonArrayRequest(Request.Method.GET, url, null,
-                    new Response.Listener<JSONArray>()
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, obj,
+                    new Response.Listener<JSONObject>()
                     {
                         @Override
-                        public void onResponse(JSONArray response) {
+                        public void onResponse(JSONObject response) {
                             try {
                                 Log.e("info", response.toString());
-                                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create(); //FIXME
-                                Products[] products = gson.fromJson(response.toString(), Products[].class);
+                                Integer result = (Integer) response.get("result");
                                 //NOW BUILD NOTIFICATION
-                                if (products != null && products.length > 0) {
-                                    Log.e("info", products[0].getExpDate() +"");
-                                    Integer len = 0;
-                                    Calendar today = Calendar.getInstance();
-                                    for(Products p : products)
-                                        if (p.getExpDate().after(new Date()))
-                                            len++;
+                                if (result != null && result > 0) {
                                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "MY_CHANNEL_ID")
                                         .setSmallIcon(R.drawable.ic_shopping_cart)
                                         .setContentTitle("EXPIRING PRODUCTS")
-                                        .setContentText(len + " PRODUCTS ARE EXPIRING");
+                                        .setContentText(result + " PRODUCTS ARE EXPIRING");
                                     Intent resultIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                     PendingIntent resultPendingIntent = PendingIntent.getActivity(
                                             getApplicationContext(),
@@ -103,7 +111,7 @@ public class JobSchedulerService extends JobService {
                     }
             );
             // add it to the RequestQueue
-            queue.add(getRequest);
+            queue.add(postRequest);
 
             jobFinished( params, false );
 
