@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import it.uniroma1.dis.exam.R;
 
@@ -23,6 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
@@ -52,9 +55,15 @@ public class LoginActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.server_Client_id))
                 .requestEmail()
                 .build();
-        //check already signed user
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        //check already signed user or if it is logout
+        Intent i = getIntent();
+        if (i!= null && i.getStringExtra("logout") != null)
+            signOut();
+        else {
+            Log.e("else","here else");
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        }
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +121,9 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString("displayName", account.getDisplayName());
                                 editor.putString("email", account.getEmail());
                                 editor.commit();
+                                //now intent
+                                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                                startActivity(i);
                             }catch(Exception e){
                                 Log.e("Error", e.getMessage());
                             }
@@ -128,15 +140,22 @@ public class LoginActivity extends AppCompatActivity {
             // add it to the RequestQueue
             queue.add(getRequest);
 
-            Intent i = new Intent(this,MainActivity.class);
-            startActivity(i);
-
             //TODO - intent to next page
         } catch (ApiException e) {
             Log.d("ERROR", "ERRORE GENERICO DI LOG IN");
             e.printStackTrace();
             Log.w("ERROR", "signInResult:failed code=" + e.getStatusCode());
         }
+    }
+
+    public void signOut(){
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(getApplicationContext(), "DISCONNECTED", Toast.LENGTH_SHORT);
+                    }
+                });
     }
 
 

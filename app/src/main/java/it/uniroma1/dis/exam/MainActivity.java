@@ -158,7 +158,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_exit) {
-
+            Intent i = new Intent(this,LoginActivity.class);
+            i.putExtra("logout","logout");
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
         } else if (id == R.id.nav_food) {
             //start the shopping list activity
             Intent i = new Intent(this,ShoppingList.class);
