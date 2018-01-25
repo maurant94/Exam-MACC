@@ -38,5 +38,6 @@
     <string name="listAdd">Shopping Item</string>
     <string name="server_Client_id">172693033491-rbjhj9veqsnr5mlj241sebmrusfea193.apps.googleusercontent.com</string>
     <string name="preference_file_key">loginData</string>
+    <string name="welcome_string">Welcome to FoodStorage, your personal pantry assistant. To access the app, please Sign In!</string>
 
 </resources>

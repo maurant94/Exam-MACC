@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,7 +23,10 @@ import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,11 +83,22 @@ public class ProductActivity extends Activity {
             text = (TextView) findViewById(R.id.editQuantity);
             text.setText(p.getQuantity() + "");
             text = (TextView) findViewById(R.id.textBuyDate);
-            if(p.getBuyDate()!=null)
-                text.setText(p.getBuyDate() + "");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                if(p.getBuyDate()!=null)
+                    text.setText(sdf.format(p.getBuyDate()));
+            } catch (Exception e) {
+                Log.d("DATE", "ERROR DATE BUY" + e.getMessage());
+                text.setText("");
+            }
             text = (TextView) findViewById(R.id.textExpireDate);
-            if(p.getExpDate()!=null)
-                text.setText(p.getExpDate() + "");
+            try {
+                if(p.getExpDate()!=null)
+                    text.setText(sdf.format(p.getExpDate()));
+            } catch (Exception e) {
+                Log.d("DATE", "ERROR DATE EXP" + e.getMessage());
+                text.setText("");
+            }
         }
 
         //see if is an EDIT or ADD
