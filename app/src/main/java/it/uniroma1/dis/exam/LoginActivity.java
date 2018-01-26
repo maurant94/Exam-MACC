@@ -91,8 +91,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
-            final ProgressDialog progress = ProgressDialog.show(this, "dialog title",
-                    "dialog message", true);
+            final ProgressDialog progress = ProgressDialog.show(this, "FoodStorage",
+                    ".. logging in ..", true);
             final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Log.e("token",account.getIdToken());
             //try log in auth/google_oauth2
