@@ -1,5 +1,6 @@
 package it.uniroma1.dis.exam;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -90,6 +91,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
+            final ProgressDialog progress = ProgressDialog.show(this, "dialog title",
+                    "dialog message", true);
             final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Log.e("token",account.getIdToken());
             //try log in auth/google_oauth2
@@ -122,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString("email", account.getEmail());
                                 editor.commit();
                                 //now intent
+                                if (progress.isShowing()) progress.dismiss();
                                 Intent i = new Intent(getApplicationContext(),MainActivity.class);
                                 startActivity(i);
                             }catch(Exception e){
@@ -134,13 +138,13 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.e("Error.Response", error.toString());
+                            if (progress.isShowing()) progress.dismiss();
+                            Toast.makeText(getApplicationContext(), "GENERIC CONNECTION ERROR", Toast.LENGTH_SHORT).show();
                         }
                     }
             );
             // add it to the RequestQueue
             queue.add(getRequest);
-
-            //TODO - intent to next page
         } catch (ApiException e) {
             Log.d("ERROR", "ERRORE GENERICO DI LOG IN");
             e.printStackTrace();
