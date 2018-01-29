@@ -117,6 +117,7 @@ public class ShoppingList extends AppCompatActivity
                     .into(imgProfilePic);
         }
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(1).setChecked(true);
     }
 
     @Override
@@ -142,12 +143,11 @@ public class ShoppingList extends AppCompatActivity
         } else if (id == R.id.nav_list) {
             //start the main list activity
             Intent i = new Intent(this,MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
-
-        } else if (id == R.id.nav_food) {
-
         } else if (id == R.id.nav_map) {
             Intent i = new Intent(this,MapsActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
         }
 

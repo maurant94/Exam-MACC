@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity
                     .into(imgProfilePic);
         }
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
 
         //scheduler
         JobScheduler mJobScheduler = (JobScheduler)
@@ -165,10 +166,12 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_food) {
             //start the shopping list activity
             Intent i = new Intent(this,ShoppingList.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
 
         } else if (id == R.id.nav_map) {
             Intent i = new Intent(this,MapsActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
         }
 
